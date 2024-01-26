@@ -1,0 +1,8 @@
+This file contains offsets for tooling relative to the gantry's lens focal point as seen by the camera.
+
+Coordinates are 
+
+	x	Y	Z
+
+with the exception of the 'pick up tool offset' only being Z (the thickness of the tool between
+	the PTFE contact surface and the top part of the tool that contacts the bellows tool.

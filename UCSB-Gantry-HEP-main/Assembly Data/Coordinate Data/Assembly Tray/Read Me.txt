@@ -1,0 +1,24 @@
+Each folder represents a single carrier tray. Carrier Trays should have an id number 'sharpie-d' onto them
+	that matches the name of its folder. The contents are described below.
+
+'Centers' lists the positions of the centers between each set of locating pins on the tray. Values
+	are written to this file when fiducials are located on the tray by the gantry. Note that
+	if the tray is released from vacuum, it will move and these coordinates will become outdated.
+	In the future these coordinates may be held only temporarily in LabVIEW, but the debugging stages
+	we are at now are made easier by storing these in a text file.
+
+'Fiducials' lists the positions of the fiducials relative to the workspace that the carrier tray resides.
+	They are the results of the last time the fiducials were located. Each time the tray is moved these
+	coordinates are used to help the gantry move approximately to the new fiducial locations.
+
+'OGP Coordinates' lists the positions of the fiducials and locating pins as found by the OGP. It does 
+	not matter where and what angle the plate was measured on the OGP. LabVIEW accounts for this as it
+	translates the coordinates to its own workspace.
+
+'Pin Coordinates' generated programatically, used only for debugging.
+
+'Cure Correction' documents the drift of a component during curing. This value is subtracted from the 
+	position that the gantry intends to place the component.
+
+
+See legends and excel forms for each.
