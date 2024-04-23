@@ -44,6 +44,7 @@
 				<Item Name="Arduino.lvclass" Type="LVClass" URL="../../Classes/Controller/I-O/Arduino/Arduino.lvclass"/>
 				<Item Name="A3200.lvclass" Type="LVClass" URL="../../Classes/Controller/Motion/A3200/A3200.lvclass"/>
 				<Item Name="Controller.lvclass" Type="LVClass" URL="../../Classes/Controller/Controller.lvclass"/>
+				<Item Name="QR Code Reader.lvclass" Type="LVClass" URL="../../Classes/Controller/Camera/QR Code Reader/QR Code Reader.lvclass"/>
 			</Item>
 			<Item Name="Components" Type="Folder">
 				<Item Name="Baseplate.lvclass" Type="LVClass" URL="../../Classes/Components/Baseplate/Baseplate.lvclass"/>
