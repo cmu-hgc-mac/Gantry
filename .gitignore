@@ -548,3 +548,92 @@ UCSB-Gantry-HEP-main/Assembly Data/Glue Pattern Data/Sensor Dispense/SKIROCV2/Co
 UCSB-Gantry-HEP-main/Assembly Data/Glue Pattern Data/Sensor Dispense/SKIROCV2/Timing/15.30.txt
 UCSB-Gantry-HEP-main/Assembly Data/Glue Pattern Data/Sensor Dispense/Will Practice/Coordinates.txt
 UCSB-Gantry-HEP-main/Assembly Data/Glue Pattern Data/Sensor Dispense/Will Practice/Timing/15.30.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Assembly Tray/1/Corrections.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Assembly Tray/1/FiducialsPCB.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Assembly Tray/1/FiducialsSensor.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Assembly Tray/1/FullPCBCorrections.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Assembly Tray/1/FullSensorCorrections.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Assembly Tray/1/new setup/corners/Corrections.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Assembly Tray/1/new setup/corners/Fiducials.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Assembly Tray/1/new setup/corners/Syringe Coordinates.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Assembly Tray/1/Old Files/Relative Coordinates - Copy.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Assembly Tray/1/Old Files/Relative Coordinates - Failed Attempt.xlsx
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Assembly Tray/1/Old Files/Relative Coordinates - FULL LIST.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Assembly Tray/1/Old Files/Syringe Coordinates - Full List.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Assembly Tray/1/Relative Coordinates - real 02.24.23.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Assembly Tray/1/Relative Coordinates Right Partial Tray 3.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Assembly Tray/1/Relative Coordinates Right Partial.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Assembly Tray/1/Relative Coordinates Tray 3.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Assembly Tray/1/Relative Coordinates.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Assembly Tray/1/Syringe Coordinates.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Assembly Tray/1/test/Corrections OGP.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Assembly Tray/1/test/Corrections.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Assembly Tray/1/test/Fiducials.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Assembly Tray/1/test/new.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Assembly Tray/1/test/pos2 outer pin.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Assembly Tray/1/test/Relative Coordinates - 082x.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Assembly Tray/1/test/Relative Coordinates - 7x.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Assembly Tray/1/test/Relative Coordinates - gantry camera.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Assembly Tray/1/test/Relative Coordinates OGP.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Assembly Tray/1/test/Relative Coordinates.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Assembly Tray/1/test/Syringe Coordinates - nominal.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Assembly Tray/1/test/Syringe Coordinates OGP.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Assembly Tray/1/test/Syringe Coordinates.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Assembly Tray/2/Corrections2.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Assembly Tray/2/Fiducials Tray 2.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Assembly Tray/2/Relative Coordinates Right Partial Tray 2.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Assembly Tray/2/Relative Coordinates Tray 2 - Copy.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Assembly Tray/2/Relative Coordinates Tray 2.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Assembly Tray/2/Relative Coordinates Tray 2_old.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Assembly Tray/2/Relative Coordinates.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Assembly Tray/2/Syringe Coordinates Tray 2 - Copy.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Assembly Tray/2/Syringe Coordinates Tray 2.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Assembly Tray/3/Corrections3PCB.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Assembly Tray/3/Corrections3Sensor.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Assembly Tray/3/Fiducials Tray 3.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Assembly Tray/3/new setup/corners/Corrections.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Assembly Tray/3/new setup/corners/Fiducials.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Assembly Tray/3/new setup/corners/Syringe Coordinates.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Assembly Tray/3/Old Files/Relative Coordinates - Copy.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Assembly Tray/3/Old Files/Relative Coordinates - Failed Attempt.xlsx
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Assembly Tray/3/Old Files/Relative Coordinates - FULL LIST.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Assembly Tray/3/Old Files/Syringe Coordinates - Full List.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Assembly Tray/3/Relative Coordinates Right Partial Tray 3 - Copy.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Assembly Tray/3/Relative Coordinates Right Partial Tray 3.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Assembly Tray/3/Relative Coordinates Tray 3.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Assembly Tray/3/Syringe Coordinates Tray 3.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Assembly Tray/3/test/Corrections OGP.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Assembly Tray/3/test/Corrections.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Assembly Tray/3/test/Fiducials.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Assembly Tray/3/test/new.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Assembly Tray/3/test/pos2 outer pin.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Assembly Tray/3/test/Relative Coordinates - 082x.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Assembly Tray/3/test/Relative Coordinates - 7x.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Assembly Tray/3/test/Relative Coordinates - gantry camera.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Assembly Tray/3/test/Relative Coordinates OGP.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Assembly Tray/3/test/Relative Coordinates.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Assembly Tray/3/test/Syringe Coordinates - nominal.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Assembly Tray/3/test/Syringe Coordinates OGP.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Assembly Tray/3/test/Syringe Coordinates.txt
+*.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Component Tray/1/Fiducials - Copy.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Component Tray/1/FiducialsPCB.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Component Tray/1/FiducialsRightPartial.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Component Tray/1/FiducialsSensor.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Component Tray/2/Fiducials - Copy.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Component Tray/2/Fiducials.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Component Tray/2/FiducialsAlDummySensor.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Component Tray/2/FiducialsPCB.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Component Tray/2/FiducialsRightPartial.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Component Tray/2/FiducialsRightPartialSensor.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Component Tray/2/FiducialsSensor.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Pick Up Tool Fixture/Region 3.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Pick Up Tool Fixture/Region 3old.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Tool Offsets/Bellows Tool Offset.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Tool Offsets/Dispense Tip Offset - 1.23.2023 original.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Tool Offsets/Dispense Tip Offset.txt
+UCSB-Gantry-HEP-main/Assembly Data/Coordinate Data/Tool Offsets/Pick Up Tool Offset.txt
+UCSB-Gantry-HEP-main/Assembly Data/Glue Pattern Data - CMU/Baseplate Dispense/8Dodecagon 270/Coordinates.txt
+UCSB-Gantry-HEP-main/Assembly Data/Glue Pattern Data - CMU/Baseplate Dispense/8Dodecagon 270/Timing/8.5.25.txt
+UCSB-Gantry-HEP-main/Assembly Data/Glue Pattern Data - CMU/Baseplate Dispense/8Dodecagon 90/Coordinates.txt
+UCSB-Gantry-HEP-main/Assembly Data/Glue Pattern Data - CMU/Baseplate Dispense/Dodecagon/Timing/Lines.Edges.Speed.txt

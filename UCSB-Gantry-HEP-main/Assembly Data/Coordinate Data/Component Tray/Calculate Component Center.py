@@ -216,7 +216,7 @@ def polar_to_XY(r,theta):
     return ([r * cos(theta), r * sin(theta)])
 
 def get_CH_1(center):
-    XY = polar_to_XY(88,radians(60) + center[3])      ### CH1 is radius 88mm at (60 degrees + rotation) relative to the center
+    XY = polar_to_XY(87.145,radians(59.02) + center[3])      ### CH1 is radius 87.145mm at (59.02 degrees + rotation) relative to the center
     CH1_XYZ = [XY[0]+center[0],XY[1]+center[1]]        ### add center XY to get absolute value on gantry
     CH1_XYZ.append(center[2])
     return CH1_XYZ

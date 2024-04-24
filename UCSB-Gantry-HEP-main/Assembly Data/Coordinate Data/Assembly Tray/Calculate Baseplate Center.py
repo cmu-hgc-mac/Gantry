@@ -76,7 +76,6 @@ def build_XYZU(mapped_pos):
    # print("This is XYZUcenter", XYZUcenter)
     rotation = get_angle(mapped_pos[0],mapped_pos[1])
     XYZUcenter.append(setup_rotation(rotation))    ### First, get the angle of the offset pin compared to the center pin. Then, pass this result to account for assembly tray rotation.
-    XYZUcenter.append(rotation)
     return XYZUcenter
 
 ### define function to get XYZU center based on center and offset pins
@@ -85,8 +84,7 @@ def build_XYZU_Right_Partial(mapped_pos):
     XYZUcenter = mapped_pos[0]       ### use mapped center pin XYZ for baseplate center
     rotation = get_angle(mapped_pos[0],mapped_pos[1])
     XYZUcenter.append(setup_rotation(rotation)) ### First, get the angle of the offset pin compared to the center pin. Then, pass this result to account for assembly tray rotation.
-    XYZUcenter.append(rotation)
-    print("This is XYZUcenter Right Partial:", XYZUcenter)
+#    print("This is XYZUcenter Right Partial:", XYZUcenter)
     return XYZUcenter
 
 
@@ -101,7 +99,6 @@ def Calculate_Centers(gantry,OGP):              ### gantry is fiducials measured
     pos1 = build_XYZU(mapped_pos1)              ### pass center and offset pins to create center XYZU for pos1
     pos2 = build_XYZU(mapped_pos2)              ### pass center and offset pins to create center XYZU for pos2
     mapped_syringe.append(0)                    ### append 0 as U for syringe as an arbitrary place holder, otherwise LV throws an error
-    mapped_syringe.append(0)                    ### append 0 as raw rotation for syringe as an arbitrary place holder, otherwise LV throws an error
     Centers = [pos1,pos2,mapped_syringe]        ### return XYZU for pos1, pos2, and syringe
     return Centers
 
@@ -117,7 +114,6 @@ def Calculate_Centers_Right_Partial(gantry,OGP):              ### gantry is fidu
     #print("This is pos1", pos1)
     pos2 = build_XYZU_Right_Partial(mapped_pos2)              ### pass center and offset pins to create center XYZU for pos2
     mapped_syringe.append(0)                    ### append 0 as U for syringe as an arbitrary place holder, otherwise LV throws an error
-    mapped_syringe.append(0)                    ### append 0 as raw rotation for syringe as an arbitrary place holder, otherwise LV throws an error
     Centers = [pos1,pos2,mapped_syringe]  ### return XYZU for pos1, pos2, and syringe
     #print("This is Right Partial Centers: ", Centers)
     return Centers
