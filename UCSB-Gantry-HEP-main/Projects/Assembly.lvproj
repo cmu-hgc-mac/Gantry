@@ -51,11 +51,13 @@
 				<Item Name="Sensor.lvclass" Type="LVClass" URL="../../Classes/Components/Sensor/Sensor.lvclass"/>
 				<Item Name="PCB.lvclass" Type="LVClass" URL="../../Classes/Components/PCB/PCB.lvclass"/>
 				<Item Name="Module.lvclass" Type="LVClass" URL="../../Classes/Module/Module.lvclass"/>
+				<Item Name="Stack.lvclass" Type="LVClass" URL="../../Classes/Components/Stack/Stack.lvclass"/>
 			</Item>
 			<Item Name="Assembly Run" Type="Folder">
 				<Item Name="Database Assembly.lvclass" Type="LVClass" URL="../../Classes/Assembly/Database Assembly/Database Assembly.lvclass"/>
 				<Item Name="Calibrate.lvclass" Type="LVClass" URL="../../Classes/Assembly/Calibrate/Calibrate.lvclass"/>
 				<Item Name="Assembly Run.lvclass" Type="LVClass" URL="../../Classes/Assembly/Assembly Run.lvclass"/>
+				<Item Name="Database Entry.lvclass" Type="LVClass" URL="../../Classes/Assembly/Database Entry/Database Entry.lvclass"/>
 			</Item>
 		</Item>
 		<Item Name="Glue Testing" Type="Folder">

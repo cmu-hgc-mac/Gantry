@@ -637,3 +637,5 @@ UCSB-Gantry-HEP-main/Assembly Data/Glue Pattern Data - CMU/Baseplate Dispense/8D
 UCSB-Gantry-HEP-main/Assembly Data/Glue Pattern Data - CMU/Baseplate Dispense/8Dodecagon 270/Timing/8.5.25.txt
 UCSB-Gantry-HEP-main/Assembly Data/Glue Pattern Data - CMU/Baseplate Dispense/8Dodecagon 90/Coordinates.txt
 UCSB-Gantry-HEP-main/Assembly Data/Glue Pattern Data - CMU/Baseplate Dispense/Dodecagon/Timing/Lines.Edges.Speed.txt
+*.txt
+*.xlsx
