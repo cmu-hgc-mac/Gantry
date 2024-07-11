@@ -15,9 +15,11 @@ def assembly_data(conn_info=[], ass_type = '', geometry= '', resolution= '', bas
         ass_time_begin = datetime.now().time()
         ass_time_end = datetime.now().time()
     
-    inst_code = 'CM'
-    #conn = asyncio.run(get_conn(*conn_info))
-    #conn_info = ['cmsmac04.phys.cmu.edu', 'hgcdb', 'postgres', 'hgcal']
+    inst_code_dict = {'CM':'CMU', 'SB':'UCSB','IH':'IHEP', 'NT':'NTU', 'TI':'TIFR', 'TT':'TTU'}
+    sensor_thickness_dict = {'1': 120, '2': 200, '3': 300}
+    bp_material_dict = {'W': 'CuW', 'P': 'PCB', 'C': 'Carbon fiber'}
+    roc_version_dict = {'X': 'preseries'}
+    
     db_upload = {'geometry' : geometry, 
                 'resolution': resolution, 
                 'ass_run_date': ass_run_date, 
@@ -39,6 +41,7 @@ def assembly_data(conn_info=[], ass_type = '', geometry= '', resolution= '', bas
                 'sen_put_id': str(put_id), 
                 'tape_batch': tape_batch, 
                 'glue_batch': glue_batch})
+        db_table_name_list, db_upload_list = db_table_name, db_upload
     elif ass_type == 'module':
         db_table_name = 'module_assembly'
         db_upload.update({
@@ -54,10 +57,21 @@ def assembly_data(conn_info=[], ass_type = '', geometry= '', resolution= '', bas
                 'hxb_put_id': str(put_id), 
                 'tape_batch': tape_batch, 
                 'glue_batch': glue_batch})
+        db_upload_info = {'module_name': stack_name, 
+                          'geometry' : geometry, 
+                          'resolution': resolution,
+                          'assembled': ass_run_date}
+        try:
+            db_upload_info.update({'bp_material': bp_material_dict[stack_name[9]],
+                                   'sen_thickness': sensor_thickness_dict[stack_name[8]],
+                                   'institution': inst_code_dict[stack_name[12:14]],   
+                                   'roc_version': roc_version_dict[stack_name[10]]})
+        except: print('Check module name again. Code incomplete.')
+        db_table_name_list, db_upload_list = [db_table_name, 'module_info'], [db_upload, db_upload_info]
     try:
-        return asyncio.run(upload_PostgreSQL(conn_info, db_table_name, db_upload))
+        return asyncio.run(upload_PostgreSQL(conn_info, db_table_name_list, db_upload_list))
     except:
-        return (asyncio.get_event_loop()).run_until_complete(upload_PostgreSQL(conn_info, db_table_name, db_upload))
+        return (asyncio.get_event_loop()).run_until_complete(upload_PostgreSQL(conn_info, db_table_name_list, db_upload_list))
 
 ##########################################################################
 ############################# DEBUGGING TOOLS ################################
@@ -106,13 +120,16 @@ def get_query_write(table_name, column_names):
     query = f"""{pre_query} {'({})'.format(data_placeholder)}"""
     return query
 
-async def upload_PostgreSQL(conn_info, table_name, db_upload_data):
+async def upload_PostgreSQL(conn_info, table_name_list, db_upload_data_list):
     conn = await asyncpg.connect(
         host=conn_info[0],
         database=conn_info[1],
         user=conn_info[2],
         password=conn_info[3])
     print('Connection successful. \n')
+    if type(table_name_list) is not list: table_name_list = [table_name_list]
+    if type(db_upload_data_list) is not list: db_upload_data_list = [db_upload_data_list]
+    
     schema_name = 'public'
     table_exists_query = """
     SELECT EXISTS (
@@ -120,16 +137,17 @@ async def upload_PostgreSQL(conn_info, table_name, db_upload_data):
         FROM information_schema.tables 
         WHERE table_schema = $1 
         AND table_name = $2
-    );
-    """
-    table_exists = await conn.fetchval(table_exists_query, schema_name, table_name)  ### Returns True/False
-    if table_exists:
-        query = get_query_write(table_name, db_upload_data.keys())
-        await conn.execute(query, *db_upload_data.values())
-        print(f'Executing query: {query}')
-        print(f'Data successfully uploaded to the {table_name}!')
-    else:
-        print(f'Table {table_name} does not exist in the database.')
+    );"""
+    
+    for table_name, db_upload_data in zip(table_name_list, db_upload_data_list):
+        table_exists = await conn.fetchval(table_exists_query, schema_name, table_name)  ### Returns True/False
+        if table_exists:
+            query = get_query_write(table_name, db_upload_data.keys())
+            await conn.execute(query, *db_upload_data.values())
+            print(f'Executing query: {query}')
+            print(f'Data successfully uploaded to the {table_name}!')
+        else:
+            print(f'Table {table_name} does not exist in the database.')
     await conn.close()
     return 'Upload Success'
 
