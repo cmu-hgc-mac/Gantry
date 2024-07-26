@@ -1,5 +1,5 @@
 NI Slot	cDAQ1Mod2
-N/A	0
+N/A	-1
 Tool Primary Valve	1
 Tool Secondary Valve	2
 Region Valves [0]	3

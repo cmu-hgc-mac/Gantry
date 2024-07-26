@@ -45,6 +45,7 @@
 				<Item Name="A3200.lvclass" Type="LVClass" URL="../../Classes/Controller/Motion/A3200/A3200.lvclass"/>
 				<Item Name="Controller.lvclass" Type="LVClass" URL="../../Classes/Controller/Controller.lvclass"/>
 				<Item Name="QR Code Reader.lvclass" Type="LVClass" URL="../../Classes/Controller/Camera/QR Code Reader/QR Code Reader.lvclass"/>
+				<Item Name="example.vi" Type="VI" URL="../../Classes/Controller/Camera/QR Code Reader/example.vi"/>
 			</Item>
 			<Item Name="Components" Type="Folder">
 				<Item Name="Baseplate.lvclass" Type="LVClass" URL="../../Classes/Components/Baseplate/Baseplate.lvclass"/>
@@ -467,6 +468,19 @@
 				<Item Name="IMAQ GetImageSize" Type="VI" URL="/&lt;vilib&gt;/vision/Basics.llb/IMAQ GetImageSize"/>
 				<Item Name="JDP Utility.lvlib" Type="Library" URL="/&lt;vilib&gt;/JDP Science/JDP Science Common Utilities/JDP Utility.lvlib"/>
 				<Item Name="Space Constant.vi" Type="VI" URL="/&lt;vilib&gt;/dlg_ctls.llb/Space Constant.vi"/>
+				<Item Name="Data Matrix Advanced Options.ctl" Type="VI" URL="/&lt;vilib&gt;/vision/Instrument.llb/Data Matrix Advanced Options.ctl"/>
+				<Item Name="Prepare For Grading.ctl" Type="VI" URL="/&lt;vilib&gt;/vision/Instrument.llb/Prepare For Grading.ctl"/>
+				<Item Name="Data Matrix Size Options.ctl" Type="VI" URL="/&lt;vilib&gt;/vision/Instrument.llb/Data Matrix Size Options.ctl"/>
+				<Item Name="Data Matrix Mirror.ctl" Type="VI" URL="/&lt;vilib&gt;/vision/Instrument.llb/Data Matrix Mirror.ctl"/>
+				<Item Name="Data Matrix Polarity.ctl" Type="VI" URL="/&lt;vilib&gt;/vision/Instrument.llb/Data Matrix Polarity.ctl"/>
+				<Item Name="Cell Fill Percentage.ctl" Type="VI" URL="/&lt;vilib&gt;/vision/Instrument.llb/Cell Fill Percentage.ctl"/>
+				<Item Name="ECC Type.ctl" Type="VI" URL="/&lt;vilib&gt;/vision/Instrument.llb/ECC Type.ctl"/>
+				<Item Name="Data Matrix Description Options.ctl" Type="VI" URL="/&lt;vilib&gt;/vision/Instrument.llb/Data Matrix Description Options.ctl"/>
+				<Item Name="Cell Filter Mode.ctl" Type="VI" URL="/&lt;vilib&gt;/vision/Instrument.llb/Cell Filter Mode.ctl"/>
+				<Item Name="Cell Sample Size.ctl" Type="VI" URL="/&lt;vilib&gt;/vision/Instrument.llb/Cell Sample Size.ctl"/>
+				<Item Name="Demodulation Mode.ctl" Type="VI" URL="/&lt;vilib&gt;/vision/Instrument.llb/Demodulation Mode.ctl"/>
+				<Item Name="Data Matrix Search Options.ctl" Type="VI" URL="/&lt;vilib&gt;/vision/Instrument.llb/Data Matrix Search Options.ctl"/>
+				<Item Name="Data Matrix Report.ctl" Type="VI" URL="/&lt;vilib&gt;/vision/Instrument.llb/Data Matrix Report.ctl"/>
 			</Item>
 			<Item Name="lvanlys.dll" Type="Document" URL="/&lt;resource&gt;/lvanlys.dll"/>
 			<Item Name="Advapi32.dll" Type="Document" URL="Advapi32.dll">
