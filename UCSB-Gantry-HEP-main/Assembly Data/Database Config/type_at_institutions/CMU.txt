@@ -1,0 +1,3 @@
+CMU,LD,Full,200,CuW
+CMU,LD,Full,200,CF
+CMU,LD,Full,300,CF
