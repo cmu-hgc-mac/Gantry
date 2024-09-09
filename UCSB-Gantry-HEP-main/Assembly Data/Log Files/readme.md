@@ -1,0 +1,1 @@
+In the absence of a local database, this saves a record of every single run selection. Can be removed in the future.
