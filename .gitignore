@@ -639,3 +639,5 @@ UCSB-Gantry-HEP-main/Assembly Data/Glue Pattern Data - CMU/Baseplate Dispense/8D
 UCSB-Gantry-HEP-main/Assembly Data/Glue Pattern Data - CMU/Baseplate Dispense/Dodecagon/Timing/Lines.Edges.Speed.txt
 *.txt
 *.xlsx
+/UCSB-Gantry-HEP-main/Main VIs/python_db/__pycache__
+/UCSB-Gantry-HEP-main/Assembly Data/Log Files/Assembly Log Files.txt
