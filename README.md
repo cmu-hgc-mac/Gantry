@@ -25,7 +25,7 @@ user_password
   - Set the Python 3 version under `Python.txt`.
     - You will require Python 3.6 and greater.
     - Please install [`asyncpg`](https://pypi.org/project/asyncpg/) for this python version.
-    - Please read the instructions on [Automatic Protomodule Naming](https://github.com/cmu-hgc-mac/HGC_DB_postgres/blob/main/documentation/gantry/README.md#Automatic-Protomodule-Naming) when using for the first time.
+    - Please read the instructions on [Automatic Protomodule Naming](https://github.com/kai-ucsb/Gantry/blob/main/README.md#automatic-protomodule-naming) when using for the first time.
   
 
 # Using the database
