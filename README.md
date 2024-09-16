@@ -26,10 +26,24 @@ user_password
     - You will require Python 3.6 and greater.
     - Please install [`asyncpg`](https://pypi.org/project/asyncpg/) for this python version.
     - Please read the instructions on [Automatic Protomodule Naming](https://github.com/kai-ucsb/Gantry/blob/main/README.md#automatic-protomodule-naming) when using for the first time.
-  
+
+# Getting Started: Fitting LabVIEW to your MAC
+1. Under `UCSB-Gantry-HEP-main/Assembly Data/Controllers`:
+  - Open Dispenser.txt and change COM4 to the USB port connected to the dispenser. To verify the port, go to Device Manager and look for Ports (COM & LPT). Unplug and then reinsert the dispenser’s USB. Change the VISA resource name to the COM that shows up in the Device Manager as a result.
+  - Open Sensors.txt and Valves.txt and change the inputs to match your MAC's setup. [CMU example here.](https://docs.google.com/presentation/d/18fChS6HMetSQ2EqdEWxNJkBMLUD8UyrRc5J06kykISw/edit#slide=id.g2587e3c00b2_0_69)
+2. Open the project: UCSB-Gantry-HEP-main/Projects/Assembly.lvproj
+  - If prompted to locate the file Aerotech.A3200.dll, select the file located under C:\Program Files (x86)\Aerotech\A3200\LabVIEW\2010\Bin. This DLL file links your gantry to the LV files.
+  - Camera Setup: Refer to [slides 5 through 13 for details.](https://docs.google.com/presentation/d/18fChS6HMetSQ2EqdEWxNJkBMLUD8UyrRc5J06kykISw/edit#slide=id.g2587e3bfd54_0_32) In the Controllers folder, open Screen.txt. Change these values to match the result of camera calibration.
+3. Assembly Tray inputs: Refer to slides 18 and 19.
+4. Pick Up Tool (PUT) locations
+  - Each PUT has three spacers with pins for loading. Place the PUT over its designated loading pins and ensure that the pins are flush with the PUT. If not, loosen the spacers a little. Place the PUT on the pins and align with the locator blocks.
+  - Use Joystick and Camera.vi to obtain XYZ coordinates of the three pins. Find the average X, Y, and Z of each PUT loading area.
+  - Refer to Readme in Assembly Data\Coordinate Data\Pick Up Tool Fixture to use these average values as inputs in Region3.txt.
+5. Tool Offsets: Refer to [slides 22 and 23.](https://docs.google.com/presentation/d/18fChS6HMetSQ2EqdEWxNJkBMLUD8UyrRc5J06kykISw/edit#slide=id.g2587e3c00b2_0_257)
+
 
 # Using the database
-- Open the project
+- Open the project Assembly.lvproj
 - Under `Main VIs`, open `Manual Assembly DB.vi`.
 
 ![image](https://github.com/user-attachments/assets/ecb34a19-4e8a-4fb5-a8d2-d61a54c10104)
