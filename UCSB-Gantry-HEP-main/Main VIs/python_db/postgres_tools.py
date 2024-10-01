@@ -90,7 +90,7 @@ def cmd_debugger():
     ass_time_end = '12:03:59.456'
     operator = 'cmuperson'
     tape_batch, glue_batch = None, None
-    conn_info = ['localhost', 'hgcdb', 'gantry_user', 'hgcal']
+    conn_info = ['localhost', 'hgcdb', 'gantry_user', 'password']
     t = assembly_data(ass_type, geometry, resolution, base_layer_id, top_layer_id, str(bl_position), str(tl_position), str(put_position), region, ass_tray_id, comp_tray_id, put_id, ass_run_date, ass_time_begin, ass_time_end, operator, tape_batch, glue_batch)
     print(t)
     
