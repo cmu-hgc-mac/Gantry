@@ -4,7 +4,9 @@ NTU,HD,Bottom,120,CuW
 NTU,HD,Left,120,CuW
 NTU,HD,Right,120,CuW
 NTU,LD,Five,300,CuW
-NTU,LD,Left,300,CF
-NTU,LD,Right,300,CF
 NTU,LD,Top,300,CuW
 NTU,LD,Bottom,300,CuW
+NTU,LD,Left,300,Ti
+NTU,LD,Right,300,Ti
+NTU,LD,Left,300,CF
+NTU,LD,Right,300,CF
