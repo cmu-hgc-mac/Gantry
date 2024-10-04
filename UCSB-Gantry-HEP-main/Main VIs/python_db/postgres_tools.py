@@ -18,7 +18,7 @@ def assembly_data(conn_info=[], ass_type = '', geometry= '', resolution= '', bas
         
         inst_code_dict = {'CM':'CMU', 'SB':'UCSB','IH':'IHEP', 'NT':'NTU', 'TI':'TIFR', 'TT':'TTU'}
         sensor_thickness_dict = {'1': 120, '2': 200, '3': 300}
-        bp_material_dict = {'W': 'CuW', 'P': 'PCB', 'C': 'Carbon fiber'}
+        bp_material_dict = {'W': 'CuW', 'P': 'PCB', 'T': 'Titanium', 'C': 'Carbon fiber'}
         roc_version_dict = {'X': 'preseries'}
         
         db_upload = {'geometry' : geometry, 

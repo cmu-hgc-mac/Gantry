@@ -1,3 +1,5 @@
 TTU,LD,Full,200,CuW
+TTU,LD,Full,200,Ti
+TTU,LD,Full,300,Ti
 TTU,LD,Full,200,CF
 TTU,LD,Full,300,CF
