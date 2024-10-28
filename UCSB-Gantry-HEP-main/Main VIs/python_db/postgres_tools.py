@@ -2,7 +2,7 @@ import numpy as np
 from datetime import datetime
 import asyncio, asyncpg #, sys, os
 
-def assembly_data(conn_info=[], ass_type = '', geometry= '', resolution= '', base_layer_id = '', top_layer_id = '', bl_position=None, tl_position=None, put_position=None, region = None, ass_tray_id= '', comp_tray_id= '', put_id= '', ass_run_date= '', ass_time_begin= '', ass_time_end= '', operator= '', tape_batch = None, glue_batch = None, stack_name = 'test', adhesive = None):
+def assembly_data(conn_info=[], ass_type = '', geometry= '', resolution= '', base_layer_id = '', top_layer_id = '', bl_position=None, tl_position=None, put_position=None, region = None, ass_tray_id= '', comp_tray_id= '', put_id= '', ass_run_date= '', ass_time_begin= '', ass_time_end= '', operator= '', tape_batch = None, glue_batch = None, stack_name = 'test', adhesive = None, comments = None):
     if (len(str(base_layer_id)) != 0) and (len(str(top_layer_id)) != 0):  ### dummy runs don't get saved
         try:
             ass_run_date = datetime.strptime(ass_run_date, '%Y-%m-%d')
@@ -21,13 +21,18 @@ def assembly_data(conn_info=[], ass_type = '', geometry= '', resolution= '', bas
         bp_material_dict = {'W': 'CuW', 'P': 'PCB', 'T': 'Titanium', 'C': 'Carbon fiber'}
         roc_version_dict = {'X': 'preseries'}
         
+        pos_col, pos_row = get_col_row(int(bl_position))
+        
         db_upload = {'geometry' : geometry, 
                     'resolution': resolution, 
                     'ass_run_date': ass_run_date, 
                     'ass_time_begin': ass_time_begin, 
                     'ass_time_end': ass_time_end, 
+                    'pos_col': pos_col,
+                    'pos_row': pos_row,
                     'adhesive': adhesive,
-                    'operator': operator}
+                    'operator': operator,
+                    'comment': comments,}
         if ass_type == 'proto':
             db_table_name = 'proto_assembly'
             db_upload.update({
@@ -192,6 +197,10 @@ def get_number_for_type(conn_info, prefix):
     except:
         return '9009'
     
+def get_col_row(i):
+    col, row = 1+(i-1)//2, 1+(i-1)%2
+    return col, row
+
 ############ OTHER STUFF #######
 
 def debugprint(test=[], news=''):
