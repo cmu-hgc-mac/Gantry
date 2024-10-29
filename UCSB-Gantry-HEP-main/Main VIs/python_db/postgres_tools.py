@@ -65,6 +65,8 @@ def assembly_data(conn_info=[], ass_type = '', geometry= '', resolution= '', bas
                     'tape_batch': tape_batch, 
                     'glue_batch': glue_batch})
             db_upload_info = {'module_name': stack_name, 
+                              'proto_name': base_layer_id, 
+                             'hxb_name': top_layer_id, 
                             'geometry' : geometry, 
                             'resolution': resolution,
                             'assembled': ass_run_date}
