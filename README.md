@@ -43,17 +43,26 @@ user_password
 
 
 # Using the database
+See [Documentation section](#more-documentation) below for debugging tips.
 - Open the project Assembly.lvproj
 - Under `Main VIs`, open `Manual Assembly DB.vi`.
 
-![image](https://github.com/user-attachments/assets/ecb34a19-4e8a-4fb5-a8d2-d61a54c10104)
+<img width="1084" alt="Screenshot 2024-11-02 at 2 07 02 PM" src="https://github.com/user-attachments/assets/e780d852-74bd-4c28-9304-1b3a7cc8e6d1">
 
-![image](https://github.com/user-attachments/assets/7cf8146d-eb93-4480-a4f5-45348839fc6d)
+<img width="1147" alt="Screenshot 2024-11-02 at 2 08 36 PM" src="https://github.com/user-attachments/assets/95ec675d-bc28-4eac-b297-5d5eb8c85d9f">
+
 Submitting the tile selections at `Initiate Assembly.vi` writes to the local database. The user can then select the routine they want to run. If the program is aborted at this stage, there will still be an entry in the database. If you don't want to keep those entries, please delete them with pgAdmin.
-![image](https://github.com/user-attachments/assets/143eae7c-d0d5-4435-97d6-c84926c5100c)
+
+<img width="729" alt="Screenshot 2024-11-02 at 2 07 44 PM" src="https://github.com/user-attachments/assets/8feb1c5c-a215-4e71-8e10-03eb92a567bd">
 
 # Automatic Protomodule Naming
-The program automatically figures our the serial number for an assembled protomodule. It does so by incrementing the serial number of last assembled protomodule of that by 1. The first time you run this program, it will save a protomodule with serial number 1 for that type, i.e. `320-PX-XXXX-XX-0001`. However, at the time this code is being deployed, we assume MACs have already assembled multiple protomodules and would like to ensure we have the right serial number sequence. We recommend opening the `proto_assembly` table in pgAdmin and editing that entry to reflect the correct protomodule name. Please do not change the naming convention, i.e. prefixes and dashes. The next time you assemble a protomodule of that type, it should have the correct and desired name. To find the table in pgAdmin: `hgcdb` -> `Schemas` -> `Tables` -> `proto_assembly`. Right-click and select `View/Edit Data`.
+There is a field to enter the full stack name (eg. 320PHF2WXCM0006 or 320MHF2WXCM0006, etc). If that field is left empty, the protomodule ID will be automatically determined by LabVIEW based on the types of components and existing protomodules of that sequence in your database. The module ID will be determined by protomodule ID provided. 
+
+It is recommended to use the text box for the first protomodule of you build for a given type. This is so because the program automatically figures out the next serial number by incrementing the serial number of last initialted protomodule of that type. If that type does not exist in the database, LabVIEW will save the next protomodule as a CuW PL by default `320PLF2WXXX0001`. Once a type of protomodule has been saved in the database, the subsequent modules can be automated, i.e. you do not need to provide a serial number for the stack. 
+
+Stack names and routines are assigned in the order of tray numbers followed by positions regardless of the order in which they were initiated in the program. For example, if you initiate `tray 2 pos 1` followed by `tray 1 pos 2`, the module IDs assigned and the assembly excecution will start at `tray 1 pos 2` followed `tray 2 pos 1`.
+
+Please check the database for this after protomodule assembly and before the module assembly step and correct it with the right bp type and index if needed. To find the table in pgAdmin: `hgcdb` -> `Schemas` -> `Tables` -> `proto_assembly`. Right-click and select `View/Edit Data`. Similarly, please monitor the `module_assembly` table.
 
 ![image](https://github.com/user-attachments/assets/0e86ef37-8087-46fd-a3ab-8047269b9300)
 
