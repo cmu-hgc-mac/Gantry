@@ -81,10 +81,12 @@ conn = asyncio.run(asyncpg.connect(
 print('Connection successful!')
 </pre>
 - **Test connection with LabVIEW**: Run `Main VIs/python_db/check_db_conn.vi` to troubleshoot python, database, and LabVIEW interconnection.
+- To check if the config file path is being read in correctly, run `Main VIs\python_db\postgres_tools.py`.
 
 # Debugging
 - Run `Database Entry.lvclass:Initiate Assembly.vi` with `Database Entry.lvclass:Write to DB.vi` open. The error will be displayed in `error out py` in the latter's front panel.
 - Additional debugging tools present for tables in `Main VIs/python_db/upload_data_db.vi`.
+
 
 ## Instruction to set up a local DB:
 https://github.com/cmu-hgc-mac/HGC_DB_postgres/
