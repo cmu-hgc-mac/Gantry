@@ -82,43 +82,6 @@ def assembly_data(conn_info=[], ass_type = '', geometry= '', resolution= '', bas
         except:
             return (asyncio.get_event_loop()).run_until_complete(upload_PostgreSQL(conn_info, db_table_name_list, db_upload_list))
     return "Dummy run. Data not saved."
-##########################################################################
-############################# DEBUGGING TOOLS ################################
-#########################################################################
-
-def cmd_debugger():
-    ass_type, base_layer_id, top_layer_id = 'proto', 'BA_123_test', 'SL_123_test'
-    ass_type, base_layer_id, top_layer_id = 'module', 'PL_123_test', 'HB_123_test'
-    geometry, resolution = 'Full', 'LD'
-    bl_position, tl_position, put_position, region = 1, 1, 1, 1
-    ass_tray_id, comp_tray_id, put_id = '1', 2, 1
-    ass_run_date = '2012-07-04'
-    ass_time_begin = '12:01:00.123'
-    ass_time_end = '12:03:59.456'
-    operator = 'cmuperson'
-    tape_batch, glue_batch = None, None
-    conn_info = ['localhost', 'hgcdb', 'gantry_user', 'password']
-    t = assembly_data(ass_type, geometry, resolution, base_layer_id, top_layer_id, str(bl_position), str(tl_position), str(put_position), region, ass_tray_id, comp_tray_id, put_id, ass_run_date, ass_time_begin, ass_time_end, operator, tape_batch, glue_batch)
-    print(t)
-    
-def db_conn_debugger(conn_info=[]):
-    try:
-        try:
-            conn = asyncio.run(asyncpg.connect(
-                host=conn_info[0],
-                database=conn_info[1],
-                user=conn_info[2],
-                password=conn_info[3]))
-            return "Connection successful! (Py 3.7)"
-        except:
-            conn = (asyncio.get_event_loop()).run_until_complete(asyncpg.connect(
-                host=conn_info[0],
-                database=conn_info[1],
-                user=conn_info[2],
-                password=conn_info[3]))
-            return "Connection successful! (Py 3.6)"
-    except:
-        return "Connection failed!"
 
 ###################################################################################
 ################################# UPLOAD TO DATABASE ###############################
@@ -203,13 +166,60 @@ def get_col_row(i):
     col, row = 1+(i-1)//2, 1+(i-1)%2
     return col, row
 
+##########################################################################
+############################# DEBUGGING TOOLS ################################
+#########################################################################
+
 ############ OTHER STUFF #######
 
 def debugprint(test=[], news=''):
     return test[2]
 #print((cmd_debugger()))
 
-
-# conn_info = ['cmsmac04.phys.cmu.edu', 'hgcdb', 'postgres', 'hgcal']
-# get_number_for_type(conn_info, 'HLF2WX-CM')
+def cmd_debugger(conn_info=[]):
+    ass_type, base_layer_id, top_layer_id = 'proto', 'BA_123_test', 'SL_123_test'
+    ass_type, base_layer_id, top_layer_id = 'module', 'PL_123_test', 'HB_123_test'
+    geometry, resolution = 'Full', 'LD'
+    bl_position, tl_position, put_position, region = 1, 1, 1, 1
+    ass_tray_id, comp_tray_id, put_id = '1', 2, 1
+    ass_run_date = '2012-07-04'
+    ass_time_begin = '12:01:00.123'
+    ass_time_end = '12:03:59.456'
+    tape_batch, glue_batch = None, None
+    t = assembly_data(conn_info, ass_type, geometry, resolution, base_layer_id, top_layer_id, str(bl_position), str(tl_position))
+    print(t)
     
+def db_conn_debugger(conn_info=[]):
+    try:
+        try:
+            conn = asyncio.run(asyncpg.connect(
+                host=conn_info[0],
+                database=conn_info[1],
+                user=conn_info[2],
+                password=conn_info[3]))
+            return "Connection successful! (Py 3.7)"
+        except:
+            conn = (asyncio.get_event_loop()).run_until_complete(asyncpg.connect(
+                host=conn_info[0],
+                database=conn_info[1],
+                user=conn_info[2],
+                password=conn_info[3]))
+            return "Connection successful! (Py 3.6)"
+    except:
+        return "Connection failed!"
+
+if __name__ == "__main__":
+    import os
+    current_script_dir = os.path.dirname(os.path.abspath(__file__))
+    conn_file_path = os.path.join(current_script_dir, "..", "..", "Assembly Data", "Database Config", "conn.txt")
+    conn_file_path = os.path.normpath(conn_file_path)
+
+    with open(conn_file_path, 'r') as file:
+        conn_info = [line.strip() for line in file]
+        
+    print("Connection info:", conn_info)
+    conn_message = db_conn_debugger(conn_info)
+    print(conn_message)
+    # print(cmd_debugger(conn_info))
+    
+
