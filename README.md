@@ -45,13 +45,13 @@ user_password
 # Using the database
 See [Documentation section](#more-documentation) below for debugging tips.
 - Open the project Assembly.lvproj
-- Under `Main VIs`, open `Manual Assembly DB.vi`.
+- Under `Main VIs`, open `Manual Assembly DB.vi`. This also opens `Initiate Assembly.vi`.
+- The user can make selections in the drop-down menus and select tiles to populate data in `Data entry form.vi`.
+- **The parts get written to the local database after clicking `Submit` in `Initiate Assembly.vi`.** The user can then select the routine they want to run. **If the program is aborted at this stage, there will still be an entry in the database.** If you don't want to keep those entries, please delete them with pgAdmin4. 
 
 <img width="1084" alt="Screenshot 2024-11-02 at 2 07 02 PM" src="https://github.com/user-attachments/assets/e780d852-74bd-4c28-9304-1b3a7cc8e6d1">
 
 <img width="1147" alt="Screenshot 2024-11-02 at 2 08 36 PM" src="https://github.com/user-attachments/assets/95ec675d-bc28-4eac-b297-5d5eb8c85d9f">
-
-Submitting the tile selections at `Initiate Assembly.vi` writes to the local database. The user can then select the routine they want to run. If the program is aborted at this stage, there will still be an entry in the database. If you don't want to keep those entries, please delete them with pgAdmin.
 
 <img width="729" alt="Screenshot 2024-11-02 at 2 07 44 PM" src="https://github.com/user-attachments/assets/8feb1c5c-a215-4e71-8e10-03eb92a567bd">
 
