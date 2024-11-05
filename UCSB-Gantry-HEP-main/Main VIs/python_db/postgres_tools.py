@@ -71,10 +71,10 @@ def assembly_data(conn_info=[], ass_type = '', geometry= '', resolution= '', bas
                             'resolution': resolution,
                             'assembled': ass_run_date}
             try:
-                db_upload_info.update({'bp_material': bp_material_dict[stack_name[9]],
-                                    'sen_thickness': sensor_thickness_dict[stack_name[8]],
-                                    'institution': inst_code_dict[stack_name[12:14]],   
-                                    'roc_version': roc_version_dict[stack_name[10]]})
+                db_upload_info.update({'bp_material': bp_material_dict[(stack_name.replace("-",""))[7]],
+                                    'sen_thickness': sensor_thickness_dict[(stack_name.replace("-",""))[6]],
+                                    'institution': inst_code_dict[(stack_name.replace("-",""))[9:11]],   
+                                    'roc_version': roc_version_dict[(stack_name.replace("-",""))[8]]})
             except: print('Check module name again. Code incomplete.')
             db_table_name_list, db_upload_list = [db_table_name, 'module_info'], [db_upload, db_upload_info]
         try:
