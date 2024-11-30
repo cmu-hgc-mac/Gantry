@@ -1,6 +1,6 @@
 import numpy as np
 from datetime import datetime
-import asyncio, asyncpg #, sys, os
+import asyncio, asyncpg, traceback #, sys, os
 
 def assembly_data(conn_info=[], ass_type = '', geometry= '', resolution= '', base_layer_id = '', top_layer_id = '', bl_position=None, tl_position=None, put_position=None, region = None, ass_tray_id= '', comp_tray_id= '', put_id= '', ass_run_date= '', ass_time_begin= '', ass_time_end= '', operator= '', tape_batch = None, glue_batch = None, stack_name = 'test', adhesive = None, comments = None):
     if (len(str(base_layer_id)) != 0) and (len(str(top_layer_id)) != 0):  ### dummy runs don't get saved
@@ -19,7 +19,7 @@ def assembly_data(conn_info=[], ass_type = '', geometry= '', resolution= '', bas
         inst_code_dict = {'CM':'CMU', 'SB':'UCSB','IH':'IHEP', 'NT':'NTU', 'TI':'TIFR', 'TT':'TTU'}
         sensor_thickness_dict = {'1': 120, '2': 200, '3': 300}
         bp_material_dict = {'W': 'CuW', 'P': 'PCB', 'T': 'Titanium', 'C': 'Carbon fiber'}
-        roc_version_dict = {'X': 'preseries'}
+        roc_version_dict = {'X': 'Preseries', '2': 'HGCROCV3b-2', '4': 'HGCROCV3b-4','C': 'HGCROCV3c',}
         
         pos_col, pos_row = get_col_row(int(bl_position))
         
@@ -48,7 +48,13 @@ def assembly_data(conn_info=[], ass_type = '', geometry= '', resolution= '', bas
                     'sen_put_id': str(put_id), 
                     'tape_batch': tape_batch, 
                     'glue_batch': glue_batch})
-            db_table_name_list, db_upload_list = db_table_name, db_upload
+
+            try:
+                return asyncio.run(proto_assembly_seq(conn_info, db_table_name, db_upload))
+            except:
+                traceback.print_exc()
+                return (asyncio.get_event_loop()).run_until_complete(proto_assembly_seq(conn_info, db_table_name, db_upload))
+        
         elif ass_type == 'module':
             db_table_name = 'module_assembly'
             db_upload.update({
@@ -76,52 +82,127 @@ def assembly_data(conn_info=[], ass_type = '', geometry= '', resolution= '', bas
                                     'institution': inst_code_dict[(stack_name.replace("-",""))[9:11]],   
                                     'roc_version': roc_version_dict[(stack_name.replace("-",""))[8]]})
             except: print('Check module name again. Code incomplete.')
-            db_table_name_list, db_upload_list = [db_table_name, 'module_info'], [db_upload, db_upload_info]
+            db_upload_dict = {db_table_name: db_upload, 'module_info': db_upload_info}
         try:
-            return asyncio.run(upload_PostgreSQL(conn_info, db_table_name_list, db_upload_list))
+            return asyncio.run(module_assembly_seq(conn_info, db_upload_dict))
         except:
-            return (asyncio.get_event_loop()).run_until_complete(upload_PostgreSQL(conn_info, db_table_name_list, db_upload_list))
+            traceback.print_exc()
+            return (asyncio.get_event_loop()).run_until_complete(module_assembly_seq(conn_info, db_upload_dict))
+        
     return "Dummy run. Data not saved."
 
 ###################################################################################
 ################################# UPLOAD TO DATABASE ###############################
 #################################################################################
-def get_query_write(table_name, column_names):
-    pre_query = f""" INSERT INTO {table_name} ({', '.join(column_names)}) VALUES """
-    data_placeholder = ', '.join(['${}'.format(i) for i in range(1, len(column_names)+1)])
-    query = f"""{pre_query} {'({})'.format(data_placeholder)}"""
-    return query
 
-async def upload_PostgreSQL(conn_info, table_name_list, db_upload_data_list):
-    conn = await asyncpg.connect(
+async def init_pool(conn_info):
+    pool = await asyncpg.create_pool(
         host=conn_info[0],
         database=conn_info[1],
         user=conn_info[2],
-        password=conn_info[3])
+        password=conn_info[3],
+        min_size=10,  # minimum number of connections in the pool
+        max_size=30)  # maximum number of connections in the pool
     print('Connection successful. \n')
-    if type(table_name_list) is not list: table_name_list = [table_name_list]
-    if type(db_upload_data_list) is not list: db_upload_data_list = [db_upload_data_list]
-    
-    schema_name = 'public'
-    table_exists_query = """
-    SELECT EXISTS (
-        SELECT 1 
-        FROM information_schema.tables 
-        WHERE table_schema = $1 
-        AND table_name = $2
-    );"""
-    
-    for table_name, db_upload_data in zip(table_name_list, db_upload_data_list):
-        table_exists = await conn.fetchval(table_exists_query, schema_name, table_name)  ### Returns True/False
-        if table_exists:
-            query = get_query_write(table_name, db_upload_data.keys())
-            await conn.execute(query, *db_upload_data.values())
-            print(f'Executing query: {query}')
-            print(f'Data successfully uploaded to the {table_name}!')
+    return pool
+
+
+async def proto_assembly_seq(conn_info, db_table_name, db_upload):
+    pool = await init_pool(conn_info)
+    proto_no = await upload_PostgreSQL(pool, db_table_name, db_upload, req_return='proto_no')
+    if proto_no is not False:
+        read_query = f"""SELECT 
+        EXISTS( SELECT 1 FROM baseplate  WHERE REPLACE(bp_name, '-', '') = '{db_upload['bp_name']}')   AS bp_exists,
+        EXISTS( SELECT 1 FROM sensor     WHERE REPLACE(sen_name, '-', '') = '{db_upload['sen_name']}') AS sen_exists; """
+        records = await fetch_PostgreSQL(pool, read_query)
+        check = [dict(record) for record in records][0]
+
+        if not check['bp_exists']:
+            db_upload_bp = {'bp_name': db_upload['bp_name'], 'proto_no': proto_no}
+            await upload_PostgreSQL(pool, 'baseplate', db_upload_bp)
         else:
-            print(f'Table {table_name} does not exist in the database.')
-    await conn.close()
-    return 'Upload Success'
+            await update_PostgreSQL(pool, 'baseplate', {'proto_no': proto_no}, name_col = 'bp_name', part_name = db_upload['bp_name'] )
+
+        if not check['sen_exists']:
+            db_upload_sen = {'sen_name': db_upload['sen_name'], 'proto_no': proto_no}
+            await upload_PostgreSQL(pool, 'sensor', db_upload_sen)
+        else:
+            await update_PostgreSQL(pool, 'sensor', {'proto_no': proto_no}, name_col = 'sen_name', part_name = db_upload['sen_name'] )
+
+    await pool.close()
+    return f"Success! for {db_upload['proto_name']}"
+    
+
+async def module_assembly_seq(conn_info, db_upload_dict):
+    pool = await init_pool(conn_info)
+    module_no = await upload_PostgreSQL(pool, 'module_info', db_upload_dict['module_info'], 'module_no')  
+    if module_no is not None:
+        module_assembly_dict = db_upload_dict['module_assembly']
+        module_assembly_dict.update({'module_no': module_no})
+        await upload_PostgreSQL(pool, 'module_assembly', module_assembly_dict)
+        proto_name, hxb_name = db_upload_dict['module_info']['proto_name'], db_upload_dict['module_info']['hxb_name']
+        await update_PostgreSQL(pool, 'proto_assembly', {'module_no': module_no}, name_col = 'proto_name', part_name = proto_name )
+        temp_query = f"""UPDATE module_info SET bp_name = proto_assembly.bp_name, sen_name = proto_assembly.sen_name FROM proto_assembly WHERE proto_assembly.proto_name = module_info.proto_name;"""
+        async with pool.acquire() as conn: 
+            await conn.execute(temp_query)
+
+        read_query = f"""SELECT EXISTS(SELECT REPLACE(hxb_name, '-','') FROM hexaboard WHERE REPLACE(hxb_name, '-','') ='{hxb_name}');"""
+        records = await fetch_PostgreSQL(pool, read_query)
+        check = [dict(record) for record in records][0]
+        if not check['exists']:
+            db_upload_bp = {'hxb_name': hxb_name, 'module_no': module_no}
+            await upload_PostgreSQL(pool, 'hexaboard', db_upload_bp)
+        else:
+            await update_PostgreSQL(pool, 'hexaboard', {'module_no': module_no}, name_col = 'hxb_name', part_name = hxb_name )
+    else:
+        await upload_PostgreSQL(pool, 'module_assembly', db_upload_dict['module_assembly'])
+    await pool.close()
+    return f"Success! for {db_upload_dict['module_info']['proto_name']}"
+
+
+def get_query_write(table_name, column_names, req_return = None):
+    pre_query = f""" INSERT INTO {table_name} ({', '.join(column_names)}) VALUES """
+    data_placeholder = ', '.join(['${}'.format(i) for i in range(1, len(column_names)+1)])
+    query = f"""{pre_query} {'({})'.format(data_placeholder)}"""
+    if req_return is not None:
+        query = f"""{query} RETURNING {req_return}"""
+    return query
+
+async def upload_PostgreSQL(pool, table_name, db_upload_data, req_return = None):
+    async with pool.acquire() as conn: 
+        pk = None
+        try:
+            query = get_query_write(table_name, list(db_upload_data.keys()), req_return)
+            print(f'Executing query: {query}')
+            if req_return:
+                pk = await conn.fetchval(query, *db_upload_data.values())
+                print(f'Data successfully uploaded to the {table_name}!')
+                return pk
+            else: 
+                await conn.execute(query, *db_upload_data.values())
+                print(f'Data successfully uploaded to the {table_name}!')
+                return None
+        except Exception as e:
+            traceback.print_exc()
+            return None
+
+        
+def get_query_update(table_name, column_names, name_col):
+    data_placeholder = ', '.join([f"{col} = ${i+1}" for i, col in enumerate(column_names)])
+    pre_query = f""" UPDATE {table_name} SET {data_placeholder} WHERE """
+    query = f""" {pre_query} {name_col} = ${1+len(column_names)}; """
+    return query
+
+async def update_PostgreSQL(pool, table_name, db_upload_data, name_col, part_name):
+    async with pool.acquire() as conn: 
+        query = get_query_update(table_name, list(db_upload_data.keys()), name_col)
+        params = list(db_upload_data.values()) + [part_name]
+        try:
+            await conn.execute(query, *params)
+            print(f'Data for {part_name} updated into {table_name} table.')
+        except Exception as e:
+            print(e, f"for query {query}.")
+
 
 ######################################################################################
 ######################### READ FROM DATABASE ########################################
@@ -134,12 +215,14 @@ def get_query_read(component_type, part_name = None, comptable=comptable):
         query = f"""SELECT hexplot FROM {comptable[component_type]['prefix']}_inspect WHERE {comptable[component_type]['prefix']}_name = '{part_name}'"""
     return query
 
+async def fetch_PostgreSQL(pool, query):
+    try:
+        async with pool.acquire() as conn:  # Acquire a connection from the pool
+            value = await conn.fetch(query)
+        return value
+    except Exception as e:
+        print(e, f"for query {query}.")
 
-async def fetch_PostgreSQL(conn_info, component_type, bp_name = None):
-    conn = ''
-    result = await conn.fetch(get_query_read(component_type, bp_name ))
-    await conn.close()
-    return result
 
 async def find_largest_suffix(conn_info, prefix, table_name = 'proto_assembly', col_name = 'proto_name'):  ####### For getting protomodule count suffix based on type
     conn = await asyncpg.connect(host=conn_info[0], database=conn_info[1], user=conn_info[2], password=conn_info[3])
@@ -222,4 +305,3 @@ if __name__ == "__main__":
     print(conn_message)
     # print(cmd_debugger(conn_info))
     
-
