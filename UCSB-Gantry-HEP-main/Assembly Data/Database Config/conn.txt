@@ -1,5 +1,0 @@
-cmsmac04.phys.cmu.edu
-hgcdb
-gantry_user
-hgcal
-1
