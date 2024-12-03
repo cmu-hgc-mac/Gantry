@@ -2,7 +2,7 @@ import numpy as np
 from datetime import datetime
 import asyncio, asyncpg, traceback #, sys, os
 
-def assembly_data(conn_info=[], ass_type = '', geometry= '', resolution= '', base_layer_id = '', top_layer_id = '', bl_position=None, tl_position=None, put_position=None, region = None, ass_tray_id= '', comp_tray_id= '', put_id= '', ass_run_date= '', ass_time_begin= '', ass_time_end= '', operator= '', tape_batch = None, glue_batch = None, stack_name = 'test', adhesive = None, comments = None):
+def assembly_data(conn_info=[], ass_type = '', geometry= '', resolution= '', base_layer_id = '', top_layer_id = '', bl_position=None, tl_position=None, put_position=None, region = None, ass_tray_id= '', comp_tray_id= '', put_id= '', ass_run_date= '', ass_time_begin= '', ass_time_end= '', operator= '', tape_batch = None, glue_batch = None, stack_name = 'test', adhesive = None, comments = None, temp_c = None, rel_hum = None):
     if (len(str(base_layer_id)) != 0) and (len(str(top_layer_id)) != 0):  ### dummy runs don't get saved
         try:
             ass_run_date = datetime.strptime(ass_run_date, '%Y-%m-%d')
@@ -32,7 +32,9 @@ def assembly_data(conn_info=[], ass_type = '', geometry= '', resolution= '', bas
                     'pos_row': pos_row,
                     'adhesive': adhesive,
                     'operator': operator,
-                    'comment': comments,}
+                    'comment': comments,
+                    'temp_c': temp_c,
+                    'rel_hum':rel_hum,}
         if ass_type == 'proto':
             db_table_name = 'proto_assembly'
             db_upload.update({
