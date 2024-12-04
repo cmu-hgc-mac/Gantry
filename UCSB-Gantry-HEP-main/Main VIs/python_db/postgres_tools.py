@@ -231,8 +231,8 @@ async def find_largest_suffix(conn_info, prefix, table_name = 'proto_assembly', 
     query = f"""
         SELECT MAX(CAST(RIGHT({col_name}, 4) AS INTEGER))
         FROM {table_name} 
-        WHERE {col_name} LIKE $1"""
-    largest_suffix = await conn.fetchval(query, f'{prefix}%')
+        WHERE REPLACE({col_name},'-','') LIKE '{prefix.replace("-","")}%'"""
+    largest_suffix = await conn.fetchval(query) ##, f'{prefix}%')
     await conn.close()
     if largest_suffix == None: largest_suffix = '0';
     print('New suffix:', str(int(largest_suffix)+1).zfill(4))
@@ -241,9 +241,9 @@ async def find_largest_suffix(conn_info, prefix, table_name = 'proto_assembly', 
 def get_number_for_type(conn_info, prefix):
     try:
         try:
-            return asyncio.run(find_largest_suffix(conn_info, prefix))
+            return asyncio.run(find_largest_suffix(conn_info, prefix.replace("-","")))
         except:
-            return (asyncio.get_event_loop()).run_until_complete(find_largest_suffix(conn_info, prefix))
+            return (asyncio.get_event_loop()).run_until_complete(find_largest_suffix(conn_info, prefix.replace("-","")))
     except:
         return '9009'
     
