@@ -93,6 +93,15 @@ def assembly_data(conn_info=[], ass_type = '', geometry= '', resolution= '', bas
         
     return "Dummy run. Data not saved."
 
+
+# def post_assembly_update(conn_info=[], part_type = '', part_name = 'test', comment = ''):
+#    ass_time_end = datetime.now().time()
+#    db_upload_dict = {"ass_time_end": ass_time_end}
+#    if len(comment) > 0:
+#        db_upload_dict.update({"comment": comment})
+#    asyncio.run(post_assembly_update_upload(conn_info, db_upload_dict, part_type=part_type, part_name=part_name))
+        
+   
 ###################################################################################
 ################################# UPLOAD TO DATABASE ###############################
 #################################################################################
@@ -127,9 +136,14 @@ async def proto_assembly_seq(conn_info, db_table_name, db_upload):
 
         if not check['sen_exists']:
             db_upload_sen = {'sen_name': db_upload['sen_name'], 'proto_no': proto_no}
+            if len(db_upload['comment']) > 0:
+                db_upload_sen.update({'comment': db_upload['comment']})
             await upload_PostgreSQL(pool, 'sensor', db_upload_sen)
         else:
-            await update_PostgreSQL(pool, 'sensor', {'proto_no': proto_no}, name_col = 'sen_name', part_name = db_upload['sen_name'] )
+            db_update_sen = {'proto_no': proto_no}
+            if len(db_upload['comment']) > 0:
+                db_update_sen.update({'comment': db_upload['comment']})
+            await update_PostgreSQL(pool, 'sensor', db_update_sen, name_col = 'sen_name', part_name = db_upload['sen_name'] )
 
     await pool.close()
     return f"Success! for {db_upload['proto_name']}"
@@ -187,7 +201,11 @@ async def upload_PostgreSQL(pool, table_name, db_upload_data, req_return = None)
         except Exception as e:
             traceback.print_exc()
             return None
-
+        
+#async def post_assembly_update_upload(conn_info, db_upload_dict, part_type, part_name):  ### part_type has to be proto or module
+#    pool = await init_pool(conn_info)
+#    await update_PostgreSQL(pool, table_name = f'{part_type}_assembly', db_upload_data = db_upload_dict, name_col = f'{part_type}_name', part_name = part_name)
+#    await pool.close()
         
 def get_query_update(table_name, column_names, name_col):
     data_placeholder = ', '.join([f"{col} = ${i+1}" for i, col in enumerate(column_names)])
@@ -306,4 +324,3 @@ if __name__ == "__main__":
     conn_message = db_conn_debugger(conn_info)
     print(conn_message)
     # print(cmd_debugger(conn_info))
-    
