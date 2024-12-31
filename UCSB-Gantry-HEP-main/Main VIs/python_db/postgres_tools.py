@@ -2,7 +2,59 @@ import numpy as np
 from datetime import datetime
 import asyncio, asyncpg, traceback #, sys, os
 
-def assembly_data(conn_info=[], ass_type = '', geometry= '', resolution= '', base_layer_id = '', top_layer_id = '', bl_position=None, tl_position=None, put_position=None, region = None, ass_tray_id= '', comp_tray_id= '', put_id= '', ass_run_date= '', ass_time_begin= '', ass_time_end= '', operator= '', tape_batch = None, glue_batch = None, stack_name = 'test', adhesive = None, comments = None, temp_c = None, rel_hum = None):
+def post_assembly_data(conn_info=[], ass_type='', stack_name='test', ass_time_end='', comments=None):
+    try:
+        ass_time_end = datetime.strptime(ass_time_end, '%H:%M:%S').time()
+    except:
+        ass_time_end = datetime.now().time()
+
+    if len(str(stack_name)) != 0:
+        stack_name = stack_name.replace('-','')
+        comments = f"{comments}; " if comments else None
+        db_table_name = 'proto_assembly' if ass_type == 'proto' else 'module_assembly'
+
+        if comments:
+            post_ass_update_query = f""" UPDATE {db_table_name} 
+                    SET ass_time_end = $2, comment = COALESCE(comment, '') || $3
+                    WHERE REPLACE({"proto_name" if ass_type == "proto" else "module_name"},'-','') = $1;"""
+            db_upload_val = (stack_name, ass_time_end, comments)
+        else:
+            post_ass_update_query = f""" UPDATE {db_table_name} 
+                    SET ass_time_end = $2
+                    WHERE REPLACE({"proto_name" if ass_type == "proto" else "module_name"},'-','') = $1;"""
+            db_upload_val = (stack_name, ass_time_end)
+
+        try:
+            return asyncio.run(post_assembly_update(conn_info, post_ass_update_query=post_ass_update_query, db_upload_val=db_upload_val))
+        except:
+            return (asyncio.get_event_loop()).run_until_complete(post_assembly_update(conn_info, post_ass_update_query=post_ass_update_query, db_upload_val=db_upload_val))
+    return "Dummy run. Data not saved."
+
+
+def assembly_data(conn_info=[], 
+                  ass_type = '', 
+                  geometry= '', 
+                  resolution= '', 
+                  base_layer_id = '', 
+                  top_layer_id = '', 
+                  bl_position=None, 
+                  tl_position=None, 
+                  put_position=None, 
+                  region = None, 
+                  ass_tray_id= '', 
+                  comp_tray_id= '', 
+                  put_id= '', 
+                  ass_run_date= '', 
+                  ass_time_begin= '', 
+                  ass_time_end= '', 
+                  operator= '', 
+                  tape_batch = None, 
+                  glue_batch = None, 
+                  stack_name = 'test', 
+                  adhesive = None, 
+                  comments = None, 
+                  temp_c = None, 
+                  rel_hum = None):
     if (len(str(base_layer_id)) != 0) and (len(str(top_layer_id)) != 0):  ### dummy runs don't get saved
         try:
             ass_run_date = datetime.strptime(ass_run_date, '%Y-%m-%d')
@@ -22,7 +74,8 @@ def assembly_data(conn_info=[], ass_type = '', geometry= '', resolution= '', bas
         roc_version_dict = {'X': 'Preseries', '2': 'HGCROCV3b-2', '4': 'HGCROCV3b-4','C': 'HGCROCV3c',}
         
         pos_col, pos_row = get_col_row(int(bl_position))
-        
+        comments = f"{comments}; " if comments else None
+
         db_upload = {'geometry' : geometry, 
                     'resolution': resolution, 
                     'ass_run_date': ass_run_date, 
@@ -54,7 +107,6 @@ def assembly_data(conn_info=[], ass_type = '', geometry= '', resolution= '', bas
             try:
                 return asyncio.run(proto_assembly_seq(conn_info, db_table_name, db_upload))
             except:
-                traceback.print_exc()
                 return (asyncio.get_event_loop()).run_until_complete(proto_assembly_seq(conn_info, db_table_name, db_upload))
         
         elif ass_type == 'module':
@@ -88,19 +140,9 @@ def assembly_data(conn_info=[], ass_type = '', geometry= '', resolution= '', bas
         try:
             return asyncio.run(module_assembly_seq(conn_info, db_upload_dict))
         except:
-            traceback.print_exc()
             return (asyncio.get_event_loop()).run_until_complete(module_assembly_seq(conn_info, db_upload_dict))
         
     return "Dummy run. Data not saved."
-
-
-# def post_assembly_update(conn_info=[], part_type = '', part_name = 'test', comment = ''):
-#    ass_time_end = datetime.now().time()
-#    db_upload_dict = {"ass_time_end": ass_time_end}
-#    if len(comment) > 0:
-#        db_upload_dict.update({"comment": comment})
-#    asyncio.run(post_assembly_update_upload(conn_info, db_upload_dict, part_type=part_type, part_name=part_name))
-        
    
 ###################################################################################
 ################################# UPLOAD TO DATABASE ###############################
@@ -116,6 +158,18 @@ async def init_pool(conn_info):
         max_size=30)  # maximum number of connections in the pool
     print('Connection successful. \n')
     return pool
+
+
+async def post_assembly_update(conn_info=[], post_ass_update_query='', db_upload_val = ()):
+    try:
+        pool = await init_pool(conn_info)  
+        async with pool.acquire() as conn:
+            await conn.execute(post_ass_update_query, *db_upload_val)
+            print(f'Query executed successfully: {post_ass_update_query}')
+        return 'Update successful'
+    except Exception as e:
+        print(f"Error during query execution: {str(e)}")
+        return f"Update failed: {str(e)}"
 
 
 async def proto_assembly_seq(conn_info, db_table_name, db_upload):
@@ -201,11 +255,6 @@ async def upload_PostgreSQL(pool, table_name, db_upload_data, req_return = None)
         except Exception as e:
             traceback.print_exc()
             return None
-        
-#async def post_assembly_update_upload(conn_info, db_upload_dict, part_type, part_name):  ### part_type has to be proto or module
-#    pool = await init_pool(conn_info)
-#    await update_PostgreSQL(pool, table_name = f'{part_type}_assembly', db_upload_data = db_upload_dict, name_col = f'{part_type}_name', part_name = part_name)
-#    await pool.close()
         
 def get_query_update(table_name, column_names, name_col):
     data_placeholder = ', '.join([f"{col} = ${i+1}" for i, col in enumerate(column_names)])
