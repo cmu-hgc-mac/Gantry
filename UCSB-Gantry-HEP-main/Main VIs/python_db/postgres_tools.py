@@ -157,12 +157,12 @@ def get_thickness_from_db(conn_info = [], base_layer_ids = [], ass_type = 'modul
     row = []
     if ass_type == 'proto':
         prefix = 'bp'
-        cols = [f'{prefix}_name', 'thickness', 'flatness']
-        def_data = ['', 0.0, 0.0]
+        cols = [f'{prefix}_name', 'thickness', 'flatness', 'grade']
+        def_data = ['', 0.0, 0.0, False]
     elif ass_type == 'module':
         prefix = 'proto'
-        cols = [f'{prefix}_name', 'ave_thickness', 'flatness']
-        def_data = ['', 0.0, 0.0]
+        cols = [f'{prefix}_name', 'thickness', 'ave_thickness', 'max_thickness', 'flatness', 'x_offset_mu', 'y_offset_mu', 'ang_offset_deg', 'grade']
+        def_data = ['', 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, False]
     
     def_return = {col: [str(def_data[c]) for part in base_layer_ids] for c, col in enumerate(cols)}
     
@@ -179,7 +179,7 @@ def get_thickness_from_db(conn_info = [], base_layer_ids = [], ass_type = 'modul
         for row in rows:
             index = base_layer_ids.index(row[f'{prefix}_name'])
             for col in cols:
-                def_return[col][index] = row[col] if type(row[col]) is str else str(round(row[col],3))
+                def_return[col][index] = row[col] if type(row[col]) is str else str(round(row[col],3)) if type(row[col]) is float else str((row[col]))
     
     return [cols] + [[def_return[col][i] for col in cols] for i in range(len(base_layer_ids))]
 
@@ -217,7 +217,6 @@ async def post_assembly_update(conn_info=[], post_ass_update_query='', db_upload
         async with pool.acquire() as conn:
             await conn.execute(post_ass_update_query, *db_upload_val)
             print(f'Query executed successfully: {post_ass_update_query}')
-        
         await pool.close() ## outside the loop
         return 'Update successful'
     except Exception as e:
