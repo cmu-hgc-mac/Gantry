@@ -153,6 +153,37 @@ def assembly_data_as_list(conn_info=[], ass_data_list = []):
     return "Dummy run. Data not saved."
 
 
+def get_thickness_from_db(conn_info = [], base_layer_ids = [], ass_type = 'module'):
+    row = []
+    if ass_type == 'proto':
+        prefix = 'bp'
+        cols = [f'{prefix}_name', 'thickness', 'flatness']
+        def_data = ['', 0.0, 0.0]
+    elif ass_type == 'module':
+        prefix = 'proto'
+        cols = [f'{prefix}_name', 'ave_thickness', 'flatness']
+        def_data = ['', 0.0, 0.0]
+    
+    def_return = {col: [str(def_data[c]) for part in base_layer_ids] for c, col in enumerate(cols)}
+    
+    base_layer_ids = [i.replace('-','') for i in base_layer_ids]
+    query = f"""SELECT DISTINCT ON (REPLACE({prefix}_name,'-','')) REPLACE({prefix}_name,'-','') as {prefix}_name, {', '.join([col for col in cols[1:]])}
+        FROM {prefix}_inspect WHERE REPLACE({prefix}_name,'-','') = ANY($1) ORDER BY {prefix}_name, {prefix}_row_no DESC;"""
+
+    try:
+        rows = asyncio.run(read_val_from_db(conn_info, query=query, val=base_layer_ids))
+    except:
+        rows = (asyncio.get_event_loop()).run_until_complete(read_val_from_db(conn_info, query=query, val=base_layer_ids))
+    
+    if type(rows) is list:
+        for row in rows:
+            index = base_layer_ids.index(row[f'{prefix}_name'])
+            for col in cols:
+                def_return[col][index] = row[col] if type(row[col]) is str else str(round(row[col],3))
+    
+    return [cols] + [[def_return[col][i] for col in cols] for i in range(len(base_layer_ids))]
+
+
 ###################################################################################
 ################################# UPLOAD TO DATABASE ###############################
 #################################################################################
@@ -168,6 +199,17 @@ async def init_pool(conn_info):
     print('Connection successful. \n')
     return pool
 
+async def read_val_from_db(conn_info=[], query = '', val = []):
+    try:
+        pool = await init_pool(conn_info)  
+        async with pool.acquire() as conn:
+            rows = await conn.fetch(query, list(val))
+            print(f'Query executed successfully: {query}')
+        await pool.close() ## outside the loop
+        return rows
+    except Exception as e:
+        print(f"Error during query execution: {str(e)}")
+        return None
 
 async def post_assembly_update(conn_info=[], post_ass_update_query='', db_upload_val = ()):
     try:
@@ -175,6 +217,8 @@ async def post_assembly_update(conn_info=[], post_ass_update_query='', db_upload
         async with pool.acquire() as conn:
             await conn.execute(post_ass_update_query, *db_upload_val)
             print(f'Query executed successfully: {post_ass_update_query}')
+        
+        await pool.close() ## outside the loop
         return 'Update successful'
     except Exception as e:
         print(f"Error during query execution: {str(e)}")
