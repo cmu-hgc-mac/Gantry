@@ -236,7 +236,7 @@ async def proto_assembly_seq(conn_info, db_table_name, db_upload):
 
         if not check['bp_exists']:
             db_upload_bp = {'bp_name': db_upload['bp_name'], 'proto_no': proto_no}
-            await upload_PostgreSQL(pool, 'baseplate', db_upload_bp)
+            # await upload_PostgreSQL(pool, 'baseplate', db_upload_bp)
         else:
             await update_PostgreSQL(pool, 'baseplate', {'proto_no': proto_no}, name_col = 'bp_name', part_name = db_upload['bp_name'] )
 
@@ -244,7 +244,7 @@ async def proto_assembly_seq(conn_info, db_table_name, db_upload):
             db_upload_sen = {'sen_name': db_upload['sen_name'], 'proto_no': proto_no}
             if len(db_upload['comment']) > 0:
                 db_upload_sen.update({'comment': db_upload['comment']})
-            await upload_PostgreSQL(pool, 'sensor', db_upload_sen)
+            # await upload_PostgreSQL(pool, 'sensor', db_upload_sen)
         else:
             db_update_sen = {'proto_no': proto_no}
             if len(db_upload['comment']) > 0:
@@ -273,7 +273,7 @@ async def module_assembly_seq(conn_info, db_upload_dict):
         check = [dict(record) for record in records][0]
         if not check['exists']:
             db_upload_bp = {'hxb_name': hxb_name, 'module_no': module_no}
-            await upload_PostgreSQL(pool, 'hexaboard', db_upload_bp)
+            # await upload_PostgreSQL(pool, 'hexaboard', db_upload_bp)
         else:
             await update_PostgreSQL(pool, 'hexaboard', {'module_no': module_no}, name_col = 'hxb_name', part_name = hxb_name )
     else:
