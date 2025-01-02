@@ -31,119 +31,128 @@ def post_assembly_data(conn_info=[], ass_type='', stack_name='test', ass_time_en
     return "Dummy run. Data not saved."
 
 
-def assembly_data(conn_info=[], 
-                  ass_type = '', 
-                  geometry= '', 
-                  resolution= '', 
-                  base_layer_id = '', 
-                  top_layer_id = '', 
-                  bl_position=None, 
-                  tl_position=None, 
-                  put_position=None, 
-                  region = None, 
-                  ass_tray_id= '', 
-                  comp_tray_id= '', 
-                  put_id= '', 
-                  ass_run_date= '', 
-                  ass_time_begin= '', 
-                  ass_time_end= '', 
-                  operator= '', 
-                  tape_batch = None, 
-                  glue_batch = None, 
-                  stack_name = 'test', 
-                  adhesive = None, 
-                  comments = None, 
-                  temp_c = None, 
-                  rel_hum = None):
-    if (len(str(base_layer_id)) != 0) and (len(str(top_layer_id)) != 0):  ### dummy runs don't get saved
-        try:
-            ass_run_date = datetime.strptime(ass_run_date, '%Y-%m-%d')
-        except:
-            ass_run_date = datetime.now().date()
-        
-        try:
-            ass_time_begin = datetime.strptime(ass_time_begin, '%H:%M:%S')
-            ass_time_end = datetime.strptime(ass_time_end, '%H:%M:%S')
-        except:
-            ass_time_begin = datetime.now().time()
-            ass_time_end = datetime.now().time()
-        
-        inst_code_dict = {'CM':'CMU', 'SB':'UCSB','IH':'IHEP', 'NT':'NTU', 'TI':'TIFR', 'TT':'TTU'}
-        sensor_thickness_dict = {'1': 120, '2': 200, '3': 300}
-        bp_material_dict = {'W': 'CuW', 'P': 'PCB', 'T': 'Titanium', 'C': 'Carbon fiber'}
-        roc_version_dict = {'X': 'Preseries', '2': 'HGCROCV3b-2', '4': 'HGCROCV3b-4','C': 'HGCROCV3c',}
-        
-        pos_col, pos_row = get_col_row(int(bl_position))
-        comments = f"{comments}; " if comments else None
-
-        db_upload = {'geometry' : geometry, 
-                    'resolution': resolution, 
-                    'ass_run_date': ass_run_date, 
-                    'ass_time_begin': ass_time_begin, 
-                    'ass_time_end': ass_time_end, 
-                    'pos_col': pos_col,
-                    'pos_row': pos_row,
-                    'adhesive': adhesive,
-                    'operator': operator,
-                    'comment': comments,
-                    'temp_c': temp_c,
-                    'rel_hum':rel_hum,}
-        if ass_type == 'proto':
-            db_table_name = 'proto_assembly'
-            db_upload.update({
-                    'proto_name': stack_name, 
-                    'bp_name': base_layer_id, 
-                    'sen_name': top_layer_id, 
-                    'bp_position': str(bl_position), 
-                    'sen_position': str(tl_position), 
-                    'put_position': str(put_position), 
-                    'region': str(region), 
-                    'ass_tray_id': str(ass_tray_id), 
-                    'sen_tray_id': str(comp_tray_id), 
-                    'sen_put_id': str(put_id), 
-                    'tape_batch': tape_batch, 
-                    'glue_batch': glue_batch})
-
+def assembly_data_as_list(conn_info=[], ass_data_list = []):   
+    #### The order of values in db_data_cols must match the order of values in Data cluster in Stack.lvclass: Get stack data.vi ###
+    #### The variable names below correspond to postgres col name. LV does not neet to match the col numes but just the values. ###
+    #### Right-click on the Data cluster on the front panel and click on 'reorder controls' to verify the order is correct in the code. 
+    #### The physical position of the fields is different from the actual position.
+    db_data_cols = ["ass_type", 
+                    "geometry", 
+                    "resolution", 
+                    "base_layer_id", 
+                    "top_layer_id", 
+                    "bl_position", 
+                    "tl_position", 
+                    "put_position", 
+                    "region", 
+                    "ass_tray_id", 
+                    "comp_tray_id", 
+                    "put_id", 
+                    "ass_run_date", 
+                    "ass_time_begin", 
+                    "ass_time_end", 
+                    "operator", 
+                    "tape_batch", 
+                    "glue_batch", 
+                    "stack_name", 
+                    "adhesive", 
+                    "comments", 
+                    "temp_c", 
+                    "rel_hum"]
+    
+    if ass_data_list:
+        dictinit = {db_data_cols[i] : ass_data_list[i] for i in range(len(ass_data_list))}
+        if (len(str(dictinit['base_layer_id'])) != 0) and (len(str(dictinit['top_layer_id'])) != 0):  ### dummy runs don't get saved
             try:
-                return asyncio.run(proto_assembly_seq(conn_info, db_table_name, db_upload))
+                dictinit['ass_run_date'] = datetime.strptime(dictinit['ass_run_date'], '%Y-%m-%d')
             except:
-                return (asyncio.get_event_loop()).run_until_complete(proto_assembly_seq(conn_info, db_table_name, db_upload))
-        
-        elif ass_type == 'module':
-            db_table_name = 'module_assembly'
-            db_upload.update({
-                    'module_name': stack_name, 
-                    'proto_name': base_layer_id, 
-                    'hxb_name': top_layer_id, 
-                    'pml_position': str(bl_position), 
-                    'hxb_position': str(tl_position), 
-                    'put_position': str(put_position), 
-                    'region': str(region), 
-                    'ass_tray_id': str(ass_tray_id), 
-                    'hxb_tray_id': str(comp_tray_id), 
-                    'hxb_put_id': str(put_id), 
-                    'tape_batch': tape_batch, 
-                    'glue_batch': glue_batch})
-            db_upload_info = {'module_name': stack_name, 
-                              'proto_name': base_layer_id, 
-                             'hxb_name': top_layer_id, 
-                            'geometry' : geometry, 
-                            'resolution': resolution,
-                            'assembled': ass_run_date}
+                dictinit['ass_run_date'] = datetime.now().date()
+            
             try:
-                db_upload_info.update({'bp_material': bp_material_dict[(stack_name.replace("-",""))[7]],
-                                    'sen_thickness': sensor_thickness_dict[(stack_name.replace("-",""))[6]],
-                                    'institution': inst_code_dict[(stack_name.replace("-",""))[9:11]],   
-                                    'roc_version': roc_version_dict[(stack_name.replace("-",""))[8]]})
-            except: print('Check module name again. Code incomplete.')
-            db_upload_dict = {db_table_name: db_upload, 'module_info': db_upload_info}
-        try:
-            return asyncio.run(module_assembly_seq(conn_info, db_upload_dict))
-        except:
-            return (asyncio.get_event_loop()).run_until_complete(module_assembly_seq(conn_info, db_upload_dict))
+                dictinit['ass_time_begin'] = datetime.strptime(dictinit['ass_time_begin'], '%H:%M:%S')
+                dictinit['ass_time_end'] = datetime.strptime(dictinit['ass_time_end'], '%H:%M:%S')
+            except:
+                dictinit['ass_time_begin'] = datetime.now().time()
+                dictinit['ass_time_end'] = datetime.now().time()
+            
+            inst_code_dict = {'CM':'CMU', 'SB':'UCSB','IH':'IHEP', 'NT':'NTU', 'TI':'TIFR', 'TT':'TTU'}
+            sensor_thickness_dict = {'1': 120, '2': 200, '3': 300}
+            bp_material_dict = {'W': 'CuW', 'P': 'PCB', 'T': 'Titanium', 'C': 'Carbon fiber'}
+            roc_version_dict = {'X': 'Preseries', '2': 'HGCROCV3b-2', '4': 'HGCROCV3b-4','C': 'HGCROCV3c',}
+            
+            pos_col, pos_row = get_col_row(int(dictinit['bl_position']))
+            dictinit['comments'] = f"{dictinit['comments']}; " if dictinit['comments'] else None
+
+            db_upload = {'geometry' : dictinit['geometry'], 
+                        'resolution': dictinit['resolution'], 
+                        'ass_run_date': dictinit['ass_run_date'], 
+                        'ass_time_begin': dictinit['ass_time_begin'], 
+                        'ass_time_end': dictinit['ass_time_end'], 
+                        'pos_col': dictinit['pos_col'],
+                        'pos_row': dictinit['pos_row'],
+                        'adhesive': dictinit['adhesive'],
+                        'operator': dictinit['operator'],
+                        'comment': dictinit['comments'],
+                        'temp_c': dictinit['temp_c'],
+                        'rel_hum': dictinit['rel_hum'],}
+
+            if dictinit['ass_type'] == 'proto':
+                db_table_name = 'proto_assembly'
+                db_upload.update({
+                        'proto_name': dictinit['stack_name'], 
+                        'bp_name': dictinit['base_layer_id'], 
+                        'sen_name': dictinit['top_layer_id'], 
+                        'bp_position': str(dictinit['bl_position']), 
+                        'sen_position': str(dictinit['tl_position']), 
+                        'put_position': str(dictinit['put_position']), 
+                        'region': str(dictinit['region']), 
+                        'ass_tray_id': str(dictinit['ass_tray_id']), 
+                        'sen_tray_id': str(dictinit['comp_tray_id']), 
+                        'sen_put_id': str(dictinit['put_id']), 
+                        'tape_batch': dictinit['tape_batch'], 
+                        'glue_batch': dictinit['glue_batch']})
+
+                try:
+                    return asyncio.run(proto_assembly_seq(conn_info, db_table_name, db_upload))
+                except:
+                    return (asyncio.get_event_loop()).run_until_complete(proto_assembly_seq(conn_info, db_table_name, db_upload))
+                
+            elif dictinit['ass_type'] == 'module':
+                db_table_name = 'module_assembly'
+                db_upload.update({
+                        'module_name': dictinit['stack_name'], 
+                        'proto_name': dictinit['base_layer_id'], 
+                        'hxb_name': dictinit['top_layer_id'], 
+                        'pml_position': str(dictinit['bl_position']), 
+                        'hxb_position': str(dictinit['tl_position']), 
+                        'put_position': str(dictinit['put_position']), 
+                        'region': str(dictinit['region']), 
+                        'ass_tray_id': str(dictinit['ass_tray_id']), 
+                        'hxb_tray_id': str(dictinit['comp_tray_id']), 
+                        'hxb_put_id': str(dictinit['put_id']), 
+                        'tape_batch': dictinit['tape_batch'], 
+                        'glue_batch': dictinit['glue_batch']})
+                db_upload_info = {'module_name': dictinit['stack_name'], 
+                                'proto_name': dictinit['base_layer_id'], 
+                                'hxb_name': dictinit['top_layer_id'], 
+                                'geometry' : dictinit['geometry'], 
+                                'resolution': dictinit['resolution'],
+                                'assembled': dictinit['ass_run_date']}
+                try:
+                    db_upload_info.update({'bp_material': bp_material_dict[(dictinit['stack_name'].replace("-",""))[7]],
+                                        'sen_thickness': sensor_thickness_dict[(dictinit['stack_name'].replace("-",""))[6]],
+                                        'institution': inst_code_dict[(dictinit['stack_name'].replace("-",""))[9:11]],   
+                                        'roc_version': roc_version_dict[(dictinit['stack_name'].replace("-",""))[8]]})
+                except: print('Check module name again. Code incomplete.')
+                db_upload_dict = {db_table_name: db_upload, 'module_info': db_upload_info}
+            try:
+                return asyncio.run(module_assembly_seq(conn_info, db_upload_dict))
+            except:
+                return (asyncio.get_event_loop()).run_until_complete(module_assembly_seq(conn_info, db_upload_dict))
         
     return "Dummy run. Data not saved."
-   
+
+
 ###################################################################################
 ################################# UPLOAD TO DATABASE ###############################
 #################################################################################
@@ -317,6 +326,125 @@ def get_number_for_type(conn_info, prefix):
 def get_col_row(i):
     col, row = 1+(i-1)//2, 1+(i-1)%2
     return col, row
+
+
+#############################################################################
+############################ OLDER FUNCTION #################################
+#############################################################################
+def assembly_data(conn_info=[], 
+                  ass_type = '', 
+                  geometry= '', 
+                  resolution= '', 
+                  base_layer_id = '', 
+                  top_layer_id = '', 
+                  bl_position=None, 
+                  tl_position=None, 
+                  put_position=None, 
+                  region = None, 
+                  ass_tray_id= '', 
+                  comp_tray_id= '', 
+                  put_id= '', 
+                  ass_run_date= '', 
+                  ass_time_begin= '', 
+                  ass_time_end= '', 
+                  operator= '', 
+                  tape_batch = None, 
+                  glue_batch = None, 
+                  stack_name = 'test', 
+                  adhesive = None, 
+                  comments = None, 
+                  temp_c = None, 
+                  rel_hum = None):  #### This is an alternate way to 'assembly_data_as_list' to writing to the database.
+    if (len(str(base_layer_id)) != 0) and (len(str(top_layer_id)) != 0):  ### dummy runs don't get saved
+        try:
+            ass_run_date = datetime.strptime(ass_run_date, '%Y-%m-%d')
+        except:
+            ass_run_date = datetime.now().date()
+        
+        try:
+            ass_time_begin = datetime.strptime(ass_time_begin, '%H:%M:%S')
+            ass_time_end = datetime.strptime(ass_time_end, '%H:%M:%S')
+        except:
+            ass_time_begin = datetime.now().time()
+            ass_time_end = datetime.now().time()
+        
+        inst_code_dict = {'CM':'CMU', 'SB':'UCSB','IH':'IHEP', 'NT':'NTU', 'TI':'TIFR', 'TT':'TTU'}
+        sensor_thickness_dict = {'1': 120, '2': 200, '3': 300}
+        bp_material_dict = {'W': 'CuW', 'P': 'PCB', 'T': 'Titanium', 'C': 'Carbon fiber'}
+        roc_version_dict = {'X': 'Preseries', '2': 'HGCROCV3b-2', '4': 'HGCROCV3b-4','C': 'HGCROCV3c',}
+        
+        pos_col, pos_row = get_col_row(int(bl_position))
+        comments = f"{comments}; " if comments else None
+
+        db_upload = {'geometry' : geometry, 
+                    'resolution': resolution, 
+                    'ass_run_date': ass_run_date, 
+                    'ass_time_begin': ass_time_begin, 
+                    'ass_time_end': ass_time_end, 
+                    'pos_col': pos_col,
+                    'pos_row': pos_row,
+                    'adhesive': adhesive,
+                    'operator': operator,
+                    'comment': comments,
+                    'temp_c': temp_c,
+                    'rel_hum':rel_hum,}
+        if ass_type == 'proto':
+            db_table_name = 'proto_assembly'
+            db_upload.update({
+                    'proto_name': stack_name, 
+                    'bp_name': base_layer_id, 
+                    'sen_name': top_layer_id, 
+                    'bp_position': str(bl_position), 
+                    'sen_position': str(tl_position), 
+                    'put_position': str(put_position), 
+                    'region': str(region), 
+                    'ass_tray_id': str(ass_tray_id), 
+                    'sen_tray_id': str(comp_tray_id), 
+                    'sen_put_id': str(put_id), 
+                    'tape_batch': tape_batch, 
+                    'glue_batch': glue_batch})
+
+            try:
+                return asyncio.run(proto_assembly_seq(conn_info, db_table_name, db_upload))
+            except:
+                return (asyncio.get_event_loop()).run_until_complete(proto_assembly_seq(conn_info, db_table_name, db_upload))
+        
+        elif ass_type == 'module':
+            db_table_name = 'module_assembly'
+            db_upload.update({
+                    'module_name': stack_name, 
+                    'proto_name': base_layer_id, 
+                    'hxb_name': top_layer_id, 
+                    'pml_position': str(bl_position), 
+                    'hxb_position': str(tl_position), 
+                    'put_position': str(put_position), 
+                    'region': str(region), 
+                    'ass_tray_id': str(ass_tray_id), 
+                    'hxb_tray_id': str(comp_tray_id), 
+                    'hxb_put_id': str(put_id), 
+                    'tape_batch': tape_batch, 
+                    'glue_batch': glue_batch})
+            db_upload_info = {'module_name': stack_name, 
+                              'proto_name': base_layer_id, 
+                             'hxb_name': top_layer_id, 
+                            'geometry' : geometry, 
+                            'resolution': resolution,
+                            'assembled': ass_run_date}
+            try:
+                db_upload_info.update({'bp_material': bp_material_dict[(stack_name.replace("-",""))[7]],
+                                    'sen_thickness': sensor_thickness_dict[(stack_name.replace("-",""))[6]],
+                                    'institution': inst_code_dict[(stack_name.replace("-",""))[9:11]],   
+                                    'roc_version': roc_version_dict[(stack_name.replace("-",""))[8]]})
+            except: print('Check module name again. Code incomplete.')
+            db_upload_dict = {db_table_name: db_upload, 'module_info': db_upload_info}
+        try:
+            return asyncio.run(module_assembly_seq(conn_info, db_upload_dict))
+        except:
+            return (asyncio.get_event_loop()).run_until_complete(module_assembly_seq(conn_info, db_upload_dict))
+        
+    return "Dummy run. Data not saved."
+   
+
 
 ##########################################################################
 ############################# DEBUGGING TOOLS ################################
