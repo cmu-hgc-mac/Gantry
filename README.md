@@ -1,6 +1,6 @@
 # Getting started: Connection to the MAC local DB
 
-This documentation pertains to this project: https://github.com/kai-ucsb/Gantry
+This documentation pertains to this project: https://github.com/cmu-hgc-mac/Gantry
 
 # Getting started: Connecting to the local DB
 1. Under `UCSB-Gantry-HEP-main/Assembly Data/Database Config/type_at_institutions`, verify that the correct types of modules are present for you institution.
