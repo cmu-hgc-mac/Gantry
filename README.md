@@ -55,9 +55,9 @@ See [Documentation section](#more-documentation) below for debugging tips.
 
 ![image](https://github.com/user-attachments/assets/2b73f20d-2c17-4b4b-90dc-a33182e7cbed)
 
-![image](https://github.com/user-attachments/assets/6885cd48-6f5e-4298-a31b-8a18edd8f835)
-
 ![image](https://github.com/user-attachments/assets/df50784f-a07e-4722-ac79-06f84f4615ec)
+
+![image](https://github.com/user-attachments/assets/6885cd48-6f5e-4298-a31b-8a18edd8f835)
 
 ![image](https://github.com/user-attachments/assets/d62e2eec-1ed4-4df9-a09d-d073d561c20d)
 
