@@ -1,6 +1,6 @@
 # Getting started: Connection to the MAC local DB
 
-This documentation pertains to this project: https://github.com/kai-ucsb/Gantry
+This documentation pertains to this project: https://github.com/cmu-hgc-mac/Gantry
 
 # Getting started: Connecting to the local DB
 1. Under `UCSB-Gantry-HEP-main/Assembly Data/Database Config/type_at_institutions`, verify that the correct types of modules are present for you institution.
@@ -25,7 +25,7 @@ user_password
   - Set the Python 3 version under `Python.txt`.
     - You will require Python 3.6 and greater.
     - Please install [`asyncpg`](https://pypi.org/project/asyncpg/) for this python version.
-    - Please read the instructions on [Automatic Protomodule Naming](https://github.com/kai-ucsb/Gantry/blob/main/README.md#automatic-protomodule-naming) when using for the first time.
+    - ~~Please read the instructions on [Automatic Protomodule Naming](https://github.com/kai-ucsb/Gantry/blob/main/README.md#automatic-protomodule-naming) when using for the first time.~~
 
 # Getting Started: Fitting LabVIEW to your MAC
 1. Under `UCSB-Gantry-HEP-main/Assembly Data/Controllers`:
@@ -47,30 +47,19 @@ See [Documentation section](#more-documentation) below for debugging tips.
 - Open the project Assembly.lvproj
 - Under `Main VIs`, open `Manual Assembly DB.vi`. This also opens `Initiate Assembly.vi`.
 - The user can make selections in the drop-down menus and select tiles to populate data in `Data entry form.vi`.
-- **The parts get written to the local database after clicking `Submit` in `Initiate Assembly.vi`.** The user can then select the routine they want to run. **If the program is aborted at this stage, there will still be an entry in the database.** If you don't want to keep those entries, please delete them with pgAdmin4. 
+- If parts have been locally inspected and the values are avilable in postgres, LabVIEW will pull those values. When applicable, the user can select between `avg_thickness` and `max_thickness` and even modify the values for setting dispense height. The default is `0.0` for dummies and will need to be set manually.
+- **The parts get written to the local database after clicking `Submit` in `Initiate Assembly.vi`.** The user can then select the routine they want to run. **If the program is aborted at this stage, there will still be an entry in the database.** If you don't want to keep those entries, please delete them with pgAdmin4.
+- Post-assembly, the user will have an opportunity to submit additional comments that get appeneded to existing comments. This form can be used without assembly at a later time as long as the correct part names are provided.
 
-<img width="1084" alt="Screenshot 2024-11-02 at 2 07 02 PM" src="https://github.com/user-attachments/assets/e780d852-74bd-4c28-9304-1b3a7cc8e6d1">
+![image](https://github.com/user-attachments/assets/c98805e1-e7ff-4936-888f-a253805f8cb2)
 
-<img width="1147" alt="Screenshot 2024-11-02 at 2 08 36 PM" src="https://github.com/user-attachments/assets/95ec675d-bc28-4eac-b297-5d5eb8c85d9f">
+![image](https://github.com/user-attachments/assets/2b73f20d-2c17-4b4b-90dc-a33182e7cbed)
 
-<img width="729" alt="Screenshot 2024-11-02 at 2 07 44 PM" src="https://github.com/user-attachments/assets/8feb1c5c-a215-4e71-8e10-03eb92a567bd">
+![image](https://github.com/user-attachments/assets/df50784f-a07e-4722-ac79-06f84f4615ec)
 
-# Automatic Protomodule Naming
-There is a field to enter the full stack name (eg. 320PHF2WXCM0006 or 320MHF2WXCM0006, etc). If that field is left empty, the protomodule ID will be automatically determined by LabVIEW based on the types of components and existing protomodules of that sequence in your database. The module ID will be determined by protomodule ID provided. 
+![image](https://github.com/user-attachments/assets/6885cd48-6f5e-4298-a31b-8a18edd8f835)
 
-It is recommended to use the text box for the first protomodule of you build for a given type. This is so because the program automatically figures out the next serial number by incrementing the serial number of last initialted protomodule of that type. If that type does not exist in the database, LabVIEW will save the next protomodule as a CuW PL by default `320PLF2WXXX0001`. Once a type of protomodule has been saved in the database, the subsequent modules can be automated, i.e. you do not need to provide a serial number for the stack. 
-
-Stack names and routines are assigned in the order of tray numbers followed by positions regardless of the order in which they were initiated in the program. For example, if you initiate `tray 2 pos 1` followed by `tray 1 pos 2`, the module IDs assigned and the assembly excecution will start at `tray 1 pos 2` followed `tray 2 pos 1`.
-
-Please check the database for this after protomodule assembly and before the module assembly step and correct it with the right bp type and index if needed. To find the table in pgAdmin: `hgcdb` -> `Schemas` -> `Tables` -> `proto_assembly`. Right-click and select `View/Edit Data`. Similarly, please monitor the `module_assembly` table.
-
-![image](https://github.com/user-attachments/assets/0e86ef37-8087-46fd-a3ab-8047269b9300)
-
-![image](https://github.com/user-attachments/assets/7540e9c2-5339-43e7-a84d-7cd251f331eb)
-
-![image](https://github.com/user-attachments/assets/0d2896db-1d70-4e43-ad5a-88607c2c7da8)
-
-![image](https://github.com/user-attachments/assets/7e575ec3-d750-4686-b238-fd562b0f5392)
+![image](https://github.com/user-attachments/assets/d62e2eec-1ed4-4df9-a09d-d073d561c20d)
 
 
 # More Documentation
@@ -99,6 +88,28 @@ print('Connection successful!')
 
 ## Instruction to set up a local DB:
 https://github.com/cmu-hgc-mac/HGC_DB_postgres/
+
+
+
+# Automatic Protomodule Naming (Obsolete)
+**This has been made obsolete. It is not recommended to generate module serial number automatically. Please follow the serial number on the module QR codes.**
+
+There is a field to enter the full stack name (eg. 320PHF2WXCM0006 or 320MHF2WXCM0006, etc). If that field is left empty, the protomodule ID will be automatically determined by LabVIEW based on the types of components and existing protomodules of that sequence in your database. The module ID will be determined by protomodule ID provided. 
+
+It is recommended to use the text box for the first protomodule of you build for a given type. This is so because the program automatically figures out the next serial number by incrementing the serial number of last initialted protomodule of that type. If that type does not exist in the database, LabVIEW will save the next protomodule as a CuW PL by default `320PLF2WXXX0001`. Once a type of protomodule has been saved in the database, the subsequent modules can be automated, i.e. you do not need to provide a serial number for the stack. 
+
+Stack names and routines are assigned in the order of tray numbers followed by positions regardless of the order in which they were initiated in the program. For example, if you initiate `tray 2 pos 1` followed by `tray 1 pos 2`, the module IDs assigned and the assembly excecution will start at `tray 1 pos 2` followed `tray 2 pos 1`.
+
+Please check the database for this after protomodule assembly and before the module assembly step and correct it with the right bp type and index if needed. To find the table in pgAdmin: `hgcdb` -> `Schemas` -> `Tables` -> `proto_assembly`. Right-click and select `View/Edit Data`. Similarly, please monitor the `module_assembly` table.
+
+![image](https://github.com/user-attachments/assets/0e86ef37-8087-46fd-a3ab-8047269b9300)
+
+![image](https://github.com/user-attachments/assets/7540e9c2-5339-43e7-a84d-7cd251f331eb)
+
+![image](https://github.com/user-attachments/assets/0d2896db-1d70-4e43-ad5a-88607c2c7da8)
+
+![image](https://github.com/user-attachments/assets/7e575ec3-d750-4686-b238-fd562b0f5392)
+
 
 <!--## Instructions, Documentation, and Developer Notes:--->
 <!--https://github.com/cmu-hgc-mac/HGC_DB_postgres/blob/main/documentation/gantry/README.md-->
