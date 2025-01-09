@@ -2,7 +2,7 @@ import numpy as np
 from datetime import datetime
 import asyncio, asyncpg, traceback #, sys, os
 
-def post_assembly_data(conn_info=[], ass_type='', stack_name='test', ass_time_end='', comments=None):
+def post_assembly_data(conn_info=[], ass_type='', stack_name='test', ass_time_end='', comment=None):
     try:
         ass_time_end = datetime.strptime(ass_time_end, '%H:%M:%S').time()
     except:
@@ -10,14 +10,14 @@ def post_assembly_data(conn_info=[], ass_type='', stack_name='test', ass_time_en
 
     if len(str(stack_name)) != 0:
         stack_name = stack_name.replace('-','')
-        comments = f"{comments}; " if comments else None
+        comment = f"{comment}; " if comment else None
         db_table_name = 'proto_assembly' if ass_type == 'proto' else 'module_assembly'
 
-        if comments:
+        if comment:
             post_ass_update_query = f""" UPDATE {db_table_name} 
                     SET ass_time_end = $2, comment = COALESCE(comment, '') || $3
                     WHERE REPLACE({"proto_name" if ass_type == "proto" else "module_name"},'-','') = $1;"""
-            db_upload_val = (stack_name, ass_time_end, comments)
+            db_upload_val = (stack_name, ass_time_end, comment)
         else:
             post_ass_update_query = f""" UPDATE {db_table_name} 
                     SET ass_time_end = $2
@@ -56,7 +56,7 @@ def assembly_data_as_list(conn_info=[], ass_data_list = []):
                     "glue_batch", 
                     "stack_name", 
                     "adhesive", 
-                    "comments", 
+                    "comment", 
                     "temp_c", 
                     "rel_hum"]
     
@@ -81,7 +81,7 @@ def assembly_data_as_list(conn_info=[], ass_data_list = []):
             roc_version_dict = {'X': 'Preseries', '2': 'HGCROCV3b-2', '4': 'HGCROCV3b-4','C': 'HGCROCV3c',}
             
             pos_col, pos_row = get_col_row(int(dictinit['bl_position']))
-            dictinit['comments'] = f"{dictinit['comments']}; " if dictinit['comments'] else None
+            dictinit['comment'] = f"{dictinit['comment']}; " if dictinit['comment'] else None
 
             db_upload = {'geometry' : dictinit['geometry'], 
                         'resolution': dictinit['resolution'], 
@@ -92,7 +92,7 @@ def assembly_data_as_list(conn_info=[], ass_data_list = []):
                         'pos_row': pos_row,
                         'adhesive': dictinit['adhesive'],
                         'operator': dictinit['operator'],
-                        'comment': dictinit['comments'],
+                        'comment': dictinit['comment'],
                         'temp_c': dictinit['temp_c'],
                         'rel_hum': dictinit['rel_hum'],}
 
@@ -242,12 +242,12 @@ async def proto_assembly_seq(conn_info, db_table_name, db_upload):
 
         if not check['sen_exists']:
             db_upload_sen = {'sen_name': db_upload['sen_name'], 'proto_no': proto_no}
-            if len(db_upload['comment']) > 0:
+            if db_upload['comment']:
                 db_upload_sen.update({'comment': db_upload['comment']})
             # await upload_PostgreSQL(pool, 'sensor', db_upload_sen)
         else:
             db_update_sen = {'proto_no': proto_no}
-            if len(db_upload['comment']) > 0:
+            if db_upload['comment']:
                 db_update_sen.update({'comment': db_upload['comment']})
             await update_PostgreSQL(pool, 'sensor', db_update_sen, name_col = 'sen_name', part_name = db_upload['sen_name'] )
 
@@ -395,7 +395,7 @@ def assembly_data(conn_info=[],
                   glue_batch = None, 
                   stack_name = 'test', 
                   adhesive = None, 
-                  comments = None, 
+                  comment = None, 
                   temp_c = None, 
                   rel_hum = None):  #### This is an alternate way to 'assembly_data_as_list' to writing to the database.
     if (len(str(base_layer_id)) != 0) and (len(str(top_layer_id)) != 0):  ### dummy runs don't get saved
@@ -417,7 +417,7 @@ def assembly_data(conn_info=[],
         roc_version_dict = {'X': 'Preseries', '2': 'HGCROCV3b-2', '4': 'HGCROCV3b-4','C': 'HGCROCV3c',}
         
         pos_col, pos_row = get_col_row(int(bl_position))
-        comments = f"{comments}; " if comments else None
+        comment = f"{comment}; " if comment else None
 
         db_upload = {'geometry' : geometry, 
                     'resolution': resolution, 
@@ -428,7 +428,7 @@ def assembly_data(conn_info=[],
                     'pos_row': pos_row,
                     'adhesive': adhesive,
                     'operator': operator,
-                    'comment': comments,
+                    'comment': comment,
                     'temp_c': temp_c,
                     'rel_hum':rel_hum,}
         if ass_type == 'proto':
