@@ -51,9 +51,11 @@ See [Documentation section](#more-documentation) below for debugging tips.
 - **The parts get written to the local database after clicking `Submit` in `Initiate Assembly.vi`.** The user can then select the routine they want to run. **If the program is aborted at this stage, there will still be an entry in the database.** If you don't want to keep those entries, please delete them with pgAdmin4.
 - Post-assembly, the user will have an opportunity to submit additional comments that get appeneded to existing comments. This form can be used without assembly at a later time as long as the correct part names are provided.
 
-![image](https://github.com/user-attachments/assets/c98805e1-e7ff-4936-888f-a253805f8cb2)
+![image](https://github.com/user-attachments/assets/4a74bae4-2c4c-465e-8c2d-ba301616a946)
 
-![image](https://github.com/user-attachments/assets/2b73f20d-2c17-4b4b-90dc-a33182e7cbed)
+![image](https://github.com/user-attachments/assets/49dabd94-95ea-46bd-8ab5-6b99fbf8dbdf)
+
+![image](https://github.com/user-attachments/assets/11327ffc-dea5-4c77-ae31-e7ef2da281be)
 
 ![image](https://github.com/user-attachments/assets/df50784f-a07e-4722-ac79-06f84f4615ec)
 
