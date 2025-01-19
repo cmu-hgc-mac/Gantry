@@ -21,7 +21,7 @@ user_password
 3. Under `UCSB-Gantry-HEP-main/Assembly Data/Controllers`:
   - Verify the region numbers in `Regions.txt`.
   - Edit `Institution.txt` with the abbreviation of your institution (`CMU`, `IHEP`, `NTU`, `TTU`, `TIFR`, `UCSB`).
-  - Save the CERN IDs of your technicians in `Operators.txt` one person per line with no trailing spaces.
+  - Save the CERN IDs (or `FirstnameLastname` if CERN ID is not available) of your technicians in `Operators.txt` one person per line with no trailing spaces.
   - Set the Python 3 version under `Python.txt`.
     - You will require Python 3.6 and greater.
     - Please install [`asyncpg`](https://pypi.org/project/asyncpg/) for this python version.
@@ -45,10 +45,10 @@ user_password
 # Using the database
 See [Documentation section](#more-documentation) below for debugging tips.
 - Open the project Assembly.lvproj
-- Under `Main VIs`, open `Manual Assembly DB.vi`. This also opens `Initiate Assembly.vi`.
-- The user can make selections in the drop-down menus and select tiles to populate data in `Data entry form.vi`.
+- Under `Main VIs`, open `Manual Assembly DB.vi`. This also opens `Initiate multi-module assembly.vi`.
+- The user can make selections in the drop-down menus and select tiles to populate data in `Data entry form multi-module.vi`. The module-module data form checks if the parts match the assembly type. It also formats the sensor ID input to match CERN convention.
 - If parts have been locally inspected and the values are avilable in postgres, LabVIEW will pull those values. When applicable, the user can select between `avg_thickness` and `max_thickness` and even modify the values for setting dispense height. The default is `0.0` for dummies and will need to be set manually.
-- **The parts get written to the local database after clicking `Submit` in `Initiate Assembly.vi`.** The user can then select the routine they want to run. **If the program is aborted at this stage, there will still be an entry in the database.** If you don't want to keep those entries, please delete them with pgAdmin4.
+- **The parts get written to the local database after clicking `Submit thickness` in `Check parts acceptable.vi`.** The user can then select the routine they want to run. **If the program is aborted at this stage, there will still be an entry in the database.** If you don't want to keep those entries, please delete them with pgAdmin4.
 - Post-assembly, the user will have an opportunity to submit additional comments that get appeneded to existing comments. This form can be used without assembly at a later time as long as the correct part names are provided.
 
 ![image](https://github.com/user-attachments/assets/4a74bae4-2c4c-465e-8c2d-ba301616a946)
