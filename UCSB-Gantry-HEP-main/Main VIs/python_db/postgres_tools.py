@@ -154,21 +154,24 @@ def assembly_data_as_list(conn_info=[], ass_data_list = []):
 
 
 def get_thickness_from_db(conn_info = [], base_layer_ids = [], ass_type = 'module'):
-    row = []
     if ass_type == 'proto':
         prefix = 'bp'
-        cols = [f'{prefix}_name', 'thickness', 'flatness', 'grade']
-        def_data = ['', 0.0, 0.0, False]
+        table_name = 'baseplate'
+        tracker_col = 'proto_no'
+        cols = [f'{prefix}_name', 'thickness', 'flatness', 'grade', 'comment']
+        default_data = ['', 0.0, 0.0, False, None]
+        pk_name = 'bp_row_no'
     elif ass_type == 'module':
         prefix = 'proto'
-        cols = [f'{prefix}_name', 'thickness', 'ave_thickness', 'max_thickness', 'flatness', 'x_offset_mu', 'y_offset_mu', 'ang_offset_deg', 'grade']
-        def_data = ['', 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, False]
+        pk_name = 'proto_row_no'
+        cols = [f'{prefix}_name', 'thickness', 'ave_thickness', 'max_thickness', 'flatness', 'x_offset_mu', 'y_offset_mu', 'ang_offset_deg', 'grade', 'comment']
+        default_data = ['', 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, False, None]
     
-    def_return = {col: [str(def_data[c]) for part in base_layer_ids] for c, col in enumerate(cols)}
+    default_return = {col: [str(default_data[c]) for part in base_layer_ids] for c, col in enumerate(cols)}
     
     base_layer_ids = [i.replace('-','') for i in base_layer_ids]
     query = f"""SELECT DISTINCT ON (REPLACE({prefix}_name,'-','')) REPLACE({prefix}_name,'-','') as {prefix}_name, {', '.join([col for col in cols[1:]])}
-        FROM {prefix}_inspect WHERE REPLACE({prefix}_name,'-','') = ANY($1) ORDER BY {prefix}_name, {prefix}_row_no DESC;"""
+        FROM {prefix}_inspect WHERE REPLACE({prefix}_name,'-','') = ANY($1) ORDER BY {prefix}_name, {pk_name} DESC;"""
 
     try:
         rows = asyncio.run(read_val_from_db(conn_info, query=query, val=base_layer_ids))
@@ -179,9 +182,109 @@ def get_thickness_from_db(conn_info = [], base_layer_ids = [], ass_type = 'modul
         for row in rows:
             index = base_layer_ids.index(row[f'{prefix}_name'])
             for col in cols:
-                def_return[col][index] = row[col] if type(row[col]) is str else str(round(row[col],3)) if type(row[col]) is float else str((row[col]))
+                default_return[col][index] = str(round(row[col],3)) if type(row[col]) is float else str(row[col])
+                
+    if ass_type == 'proto':
+        status_list = ['nonexistent' for i in range(len(base_layer_ids))]
+        check_used_query = f"""SELECT DISTINCT ON (REPLACE({table_name}.{prefix}_name,'-','')) 
+                            REPLACE({table_name}.{prefix}_name,'-','') as {prefix}_name, 
+                            {table_name}.{tracker_col}, {ass_type}_assembly.{ass_type}_name
+        FROM {table_name} LEFT JOIN {ass_type}_assembly ON {table_name}.{tracker_col} = {ass_type}_assembly.{tracker_col}
+        WHERE REPLACE({table_name}.{prefix}_name,'-','') = ANY($1) ORDER BY REPLACE({table_name}.{prefix}_name,'-',''), {table_name}.{prefix}_no DESC;"""
+
+        try:
+            rows2 = asyncio.run(read_val_from_db(conn_info, query=check_used_query, val=base_layer_ids))
+        except:
+            rows2 = (asyncio.get_event_loop()).run_until_complete(read_val_from_db(conn_info, query=check_used_query, val=base_layer_ids))
+            
+        if type(rows2) is list:
+            for row2 in rows2:
+                index = base_layer_ids.index(row2[f'{prefix}_name'])
+                status_list[index] = 'unused' if not row2[f"{ass_type}_name"] else f"{row2[f'{ass_type}_name'][5:9]}-{row2[f'{ass_type}_name'][-4:]}"
+        cols.insert(1,'status')
+        default_return['status'] = status_list
+
+    return_list = [cols] + [[default_return[col][i] for col in cols] for i in range(len(base_layer_ids))]
+    return return_list
+
+
+def check_stack_in_db(conn_info = [], stack_ids = [], ass_type = 'module'):
+    status_list = ['current run' for i in range(len(stack_ids))]
+    default_return = {'status': status_list, f'{ass_type}_name': stack_ids}
+    query = f"""SELECT REPLACE({ass_type}_name,'-','') as {ass_type}_name FROM {ass_type}_assembly WHERE REPLACE({ass_type}_name,'-','') = ANY ($1::text[])  ;"""
+    try:
+        rows = asyncio.run(read_val_from_db(conn_info, query=query, val=stack_ids))
+    except:
+        rows = (asyncio.get_event_loop()).run_until_complete(read_val_from_db(conn_info, query=query, val=stack_ids))
+        
+    if type(rows) is list:
+        for row in rows:
+            index = stack_ids.index(row[f'{ass_type}_name'])
+            default_return['status'][index] = 'part already exists!'
     
-    return [cols] + [[def_return[col][i] for col in cols] for i in range(len(base_layer_ids))]
+    return_list = [list(default_return.keys())] + [[default_return[key][i] for key in default_return.keys()] for i in range(len(stack_ids))]
+    return return_list
+
+
+def check_toplayer_in_db(conn_info = [], top_layer_ids = [], ass_type = 'module'):
+    if ass_type == 'proto':
+        prefix = 'sen'
+        tracker_col = 'proto_no'
+        cols = [f'{prefix}_name', 'thickness', 'grade', 'comment']
+        default_data = ['', 0.0, False, None]
+        table_name = 'sensor'
+        inspect_table_name = 'sensor'
+        pk_name = 'sen_no'
+    elif ass_type == 'module':
+        prefix = 'hxb'
+        table_name = 'hexaboard'
+        tracker_col = 'module_no'
+        cols = [f'{prefix}_name', 'thickness',  'flatness', 'grade', 'comment']
+        default_data = ['', 0.0, 0.0, False, None]
+        inspect_table_name = 'hxb_inspect'
+        pk_name = 'hxb_row_no'
+    
+    default_return = {col: [str(default_data[c]) for part in top_layer_ids] for c, col in enumerate(cols)}
+    
+    top_layer_ids = [i.replace('-','') for i in top_layer_ids]
+    query = f"""SELECT DISTINCT ON (REPLACE({prefix}_name,'-','')) REPLACE({prefix}_name,'-','') as {prefix}_name, {', '.join([col for col in cols[1:]])}
+        FROM {inspect_table_name} WHERE REPLACE({prefix}_name,'-','') = ANY($1) ORDER BY {prefix}_name, {pk_name} DESC;"""
+
+    try:
+        rows = asyncio.run(read_val_from_db(conn_info, query=query, val=top_layer_ids))
+    except:
+        rows = (asyncio.get_event_loop()).run_until_complete(read_val_from_db(conn_info, query=query, val=top_layer_ids))
+    
+    if type(rows) is list:
+        for row in rows:
+            index = top_layer_ids.index(row[f'{prefix}_name'])
+            for col in cols:
+                default_return[col][index] = str(round(row[col],3)) if type(row[col]) is float else str((row[col]))
+    
+    
+    status_list = ['nonexistent' for i in range(len(top_layer_ids))]
+    check_used_query = f"""SELECT DISTINCT ON (REPLACE({table_name}.{prefix}_name,'-','')) 
+                        REPLACE({table_name}.{prefix}_name,'-','') as {prefix}_name, 
+                        {table_name}.{tracker_col}, {ass_type}_assembly.{ass_type}_name
+    FROM {table_name} LEFT JOIN {ass_type}_assembly ON {table_name}.{tracker_col} = {ass_type}_assembly.{tracker_col}
+    WHERE REPLACE({table_name}.{prefix}_name,'-','') = ANY($1) ORDER BY REPLACE({table_name}.{prefix}_name,'-',''), {table_name}.{prefix}_no DESC;"""
+
+    try:
+        rows2 = asyncio.run(read_val_from_db(conn_info, query=check_used_query, val=top_layer_ids))
+    except:
+        rows2 = (asyncio.get_event_loop()).run_until_complete(read_val_from_db(conn_info, query=check_used_query, val=top_layer_ids))
+        
+    if type(rows2) is list:
+        for row2 in rows2:
+            index = top_layer_ids.index(row2[f'{prefix}_name'])
+            status_list[index] = 'unused' if not row2[f"{ass_type}_name"] else f"{row2[f'{ass_type}_name'][5:9]}-{row2[f'{ass_type}_name'][-4:]}"
+    cols.insert(1,'status')
+    default_return['status'] = status_list
+
+    
+    return_list = [cols] + [[default_return[col][i] for col in cols] for i in range(len(top_layer_ids))]
+    return return_list
+
 
 
 ###################################################################################
@@ -199,13 +302,21 @@ async def init_pool(conn_info):
     print('Connection successful. \n')
     return pool
 
+async def init_conn(conn_info):
+    conn = await asyncpg.create_pool(
+        host=conn_info[0],
+        database=conn_info[1],
+        user=conn_info[2],
+        password=conn_info[3],)
+    print('Connection successful. \n')
+    return conn
+
 async def read_val_from_db(conn_info=[], query = '', val = []):
     try:
-        pool = await init_pool(conn_info)  
-        async with pool.acquire() as conn:
-            rows = await conn.fetch(query, list(val))
-            print(f'Query executed successfully: {query}')
-        await pool.close() ## outside the loop
+        conn = await init_conn(conn_info)  
+        rows = await conn.fetch(query, list(val))
+        print(f'Query executed successfully: {query}')
+        await conn.close() ## outside the loop
         return rows
     except Exception as e:
         print(f"Error during query execution: {str(e)}")
@@ -213,11 +324,10 @@ async def read_val_from_db(conn_info=[], query = '', val = []):
 
 async def post_assembly_update(conn_info=[], post_ass_update_query='', db_upload_val = ()):
     try:
-        pool = await init_pool(conn_info)  
-        async with pool.acquire() as conn:
-            await conn.execute(post_ass_update_query, *db_upload_val)
-            print(f'Query executed successfully: {post_ass_update_query}')
-        await pool.close() ## outside the loop
+        conn = await init_conn(conn_info)  
+        await conn.execute(post_ass_update_query, *db_upload_val)
+        print(f'Query executed successfully: {post_ass_update_query}')
+        await conn.close() ## outside the loop
         return 'Update successful'
     except Exception as e:
         print(f"Error during query execution: {str(e)}")
