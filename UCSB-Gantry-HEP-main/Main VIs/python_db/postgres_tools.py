@@ -303,7 +303,7 @@ async def init_pool(conn_info):
     return pool
 
 async def init_conn(conn_info):
-    conn = await asyncpg.create_pool(
+    conn = await asyncpg.connect(
         host=conn_info[0],
         database=conn_info[1],
         user=conn_info[2],
