@@ -356,7 +356,7 @@ async def proto_assembly_seq(conn_info, db_table_name, db_upload, sen_grade = ''
         else:
             await update_PostgreSQL(pool, 'baseplate', db_upload_bp, name_col = 'bp_name', part_name = db_upload['bp_name'] )
 
-        db_upload_sen = {'proto_no': proto_no, 'grade': str(sen_grade)}
+        db_upload_sen = {'proto_no': proto_no, 'grade': str(sen_grade), 'date_inspect': db_upload['ass_run_date'], 'time_inspect': db_upload['ass_time_begin']}
         if db_upload['comment']:
             db_upload_sen.update({'comment': db_upload['comment']})
         if not check['sen_exists']:
