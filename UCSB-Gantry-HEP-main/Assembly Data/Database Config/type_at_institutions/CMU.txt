@@ -1,6 +1,0 @@
-CMU,LD,Full,200,CuW
-CMU,LD,Full,300,CuW
-CMU,LD,Full,200,Ti
-CMU,LD,Full,300,Ti
-CMU,LD,Full,200,CF
-CMU,LD,Full,300,CF
