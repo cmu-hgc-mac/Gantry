@@ -1,2 +1,2 @@
-0
-Vertical
+90
+Horizontal

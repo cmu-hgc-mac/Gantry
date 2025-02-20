@@ -1,14 +1,16 @@
 NI Slot	cDAQ1Mod2
 N/A	-1
-Tool Primary Valve	1
-Tool Secondary Valve	2
-Region Valves [0]	3
-Region Valves [1]	4
-Region 1 pos 1 baseplate vac	5
-Region 1 pos 1 o ring vac	6
-Region 1 pos 2 baseplate vac	7
-Region 1 pos 2 o ring vac	8
-Region 2 pos 1 Si/PCB vac	9
-Region 2 pos 2 Si/PCB vac	10
-N/A	11
-N/A	12
+Tool Primary Valve	17
+Tool Secondary Valve	18
+Region Valves [0]	2
+Region Valves [1]	1
+Region Valves [2]	7
+Region Valves [3]	4
+Region 1 pos 1 o ring vac	0
+Region 1 pos 2 o ring vac	10
+Region 1 pos 3 o ring vac	8
+Region 1 pos 4 o ring vac	3
+Region 2 pos 1 Si/PCB vac	11
+Region 2 pos 2 Si/PCB vac	9
+Region 2 pos 3 Si/PCB vac	5
+Region 2 pos 4 Si/PCB vac	6
