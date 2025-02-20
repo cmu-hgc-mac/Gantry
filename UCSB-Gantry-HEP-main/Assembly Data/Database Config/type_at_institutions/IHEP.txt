@@ -1,1 +1,0 @@
-IHEP,LD,Full,300,CuW
