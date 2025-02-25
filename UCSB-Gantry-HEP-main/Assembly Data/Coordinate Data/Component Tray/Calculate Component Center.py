@@ -44,7 +44,8 @@ def build_XYZU(reshape_input):
     for item in XYZ:            ### get average of each axis value
         XYZU.append(Average(item))
     XYZU.append(get_angle(reshape_input[2],reshape_input[0]))     ### get angle between CH 81 and 95 for sensor or FD3 and FD6 for hexaboard
-    return XYZU
+    distance = sqrt(((X[0]-X[1])**2)+((Y[0]-Y[1])**2))
+    return XYZU, distance
 
 ### Main LV function    
 def calculate_center(input, position, adjustment, left_handed):
@@ -57,8 +58,8 @@ def calculate_center(input, position, adjustment, left_handed):
             reshape_input.append(XYZ)
             XYZ = []
         i += 1
-    center = build_XYZU(reshape_input)  ### get center coordinates
-    CH1 = get_CH_1(center)
+    center, distance = build_XYZU(reshape_input)  ### get center coordinates
+    CH1 = get_CH_1(center,distance)
     CH1.append(0)
     ID = get_ID(center)
     ID.append(0)
@@ -251,8 +252,11 @@ def calculate_center_adjX_axisY(input, position, adjustment, left_handed):
 def polar_to_XY(r,theta):
     return ([r * cos(theta), r * sin(theta)])
 
-def get_CH_1(center):
-    XY = polar_to_XY(88,radians(60) + center[3])      ### CH1 is radius 88mm at (60 degrees + rotation) relative to the center
+def get_CH_1(center, distance):
+    if distance <165:      ### check for sensor vs HB fiducials, default to sensor
+        XY = polar_to_XY(87.938,radians(62.903) + center[3])      ### CH1 is radius 87.938 mm at (62.903 degrees + rotation) relative to the center for the HB
+    else:
+        XY = polar_to_XY(87.16,radians(61.215) + center[3])      ### CH1 is radius 87.16 mm at (61.215 degrees + rotation) relative to the center for the sensor
     CH1_XYZ = [XY[0]+center[0],XY[1]+center[1]]        ### add center XY to get absolute value on gantry
     CH1_XYZ.append(center[2])
     return CH1_XYZ
