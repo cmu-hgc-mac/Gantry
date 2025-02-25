@@ -340,30 +340,34 @@ async def post_assembly_update(conn_info=[], post_ass_update_query='', db_upload
 
 async def proto_assembly_seq(conn_info, db_table_name, db_upload, sen_grade = ''):
     pool = await init_pool(conn_info)
-    proto_no = await upload_PostgreSQL(pool, db_table_name, db_upload, req_return='proto_no')
-    today = datetime.now().date()
-    if proto_no is not False:
-        read_query = f"""SELECT 
-        EXISTS( SELECT 1 FROM baseplate  WHERE REPLACE(bp_name, '-', '') = '{db_upload['bp_name']}')   AS bp_exists,
-        EXISTS( SELECT 1 FROM sensor     WHERE REPLACE(sen_name, '-', '') = '{db_upload['sen_name']}') AS sen_exists; """
-        records = await fetch_PostgreSQL(pool, read_query)
-        check = [dict(record) for record in records][0]
+    check_exists_query = f"""SELECT EXISTS(SELECT 1 FROM proto_assembly WHERE proto_name = '{db_upload['proto_name']}' AND sen_name = '{db_upload['sen_name']}' AND bp_name = '{db_upload['bp_name']}')"""
+    async with pool.acquire() as conn:
+        exists = await conn.fetchval(check_exists_query)
+    if not bool(exists):
+        proto_no = await upload_PostgreSQL(pool, db_table_name, db_upload, req_return='proto_no')
+        today = datetime.now().date()
+        if proto_no is not False:
+            read_query = f"""SELECT 
+            EXISTS( SELECT 1 FROM baseplate  WHERE REPLACE(bp_name, '-', '') = '{db_upload['bp_name']}')   AS bp_exists,
+            EXISTS( SELECT 1 FROM sensor     WHERE REPLACE(sen_name, '-', '') = '{db_upload['sen_name']}') AS sen_exists; """
+            records = await fetch_PostgreSQL(pool, read_query)
+            check = [dict(record) for record in records][0]
 
-        db_upload_bp = {'proto_no': proto_no}
-        if not check['bp_exists']:
-            db_upload_bp.update({'bp_name': db_upload['bp_name'], 'date_verify_received': today})
-            await upload_PostgreSQL(pool, 'baseplate', db_upload_bp)
-        else:
-            await update_PostgreSQL(pool, 'baseplate', db_upload_bp, name_col = 'bp_name', part_name = db_upload['bp_name'] )
+            db_upload_bp = {'proto_no': proto_no}
+            if not check['bp_exists']:
+                db_upload_bp.update({'bp_name': db_upload['bp_name'], 'date_verify_received': today})
+                await upload_PostgreSQL(pool, 'baseplate', db_upload_bp)
+            else:
+                await update_PostgreSQL(pool, 'baseplate', db_upload_bp, name_col = 'bp_name', part_name = db_upload['bp_name'] )
 
-        db_upload_sen = {'proto_no': proto_no, 'grade': str(sen_grade), 'date_inspect': db_upload['ass_run_date'], 'time_inspect': db_upload['ass_time_begin']}
-        if db_upload['comment']:
-            db_upload_sen.update({'comment': db_upload['comment']})
-        if not check['sen_exists']:
-            db_upload_sen.update({'sen_name': db_upload['sen_name'], 'date_verify_received': today})
-            await upload_PostgreSQL(pool, 'sensor', db_upload_sen)
-        else:            
-            await update_PostgreSQL(pool, 'sensor', db_upload_sen, name_col = 'sen_name', part_name = db_upload['sen_name'] )
+            db_upload_sen = {'proto_no': proto_no, 'grade': str(sen_grade), 'date_inspect': db_upload['ass_run_date'], 'time_inspect': db_upload['ass_time_begin']}
+            if db_upload['comment']:
+                db_upload_sen.update({'comment': db_upload['comment']})
+            if not check['sen_exists']:
+                db_upload_sen.update({'sen_name': db_upload['sen_name'], 'date_verify_received': today})
+                await upload_PostgreSQL(pool, 'sensor', db_upload_sen)
+            else:            
+                await update_PostgreSQL(pool, 'sensor', db_upload_sen, name_col = 'sen_name', part_name = db_upload['sen_name'] )
 
     await pool.close()
     return f"Success! for {db_upload['proto_name']}"
@@ -371,29 +375,33 @@ async def proto_assembly_seq(conn_info, db_table_name, db_upload, sen_grade = ''
 
 async def module_assembly_seq(conn_info, db_upload_dict):
     pool = await init_pool(conn_info)
-    module_no = await upload_PostgreSQL(pool, 'module_info', db_upload_dict['module_info'], 'module_no')  
-    today = datetime.now().date()
-    if module_no is not None:
-        module_assembly_dict = db_upload_dict['module_assembly']
-        module_assembly_dict.update({'module_no': module_no})
-        await upload_PostgreSQL(pool, 'module_assembly', module_assembly_dict)
-        proto_name, hxb_name = db_upload_dict['module_info']['proto_name'], db_upload_dict['module_info']['hxb_name']
-        await update_PostgreSQL(pool, 'proto_assembly', {'module_no': module_no}, name_col = 'proto_name', part_name = proto_name )
-        temp_query = f"""UPDATE module_info SET bp_name = proto_assembly.bp_name, sen_name = proto_assembly.sen_name FROM proto_assembly WHERE proto_assembly.proto_name = module_info.proto_name;"""
-        async with pool.acquire() as conn: 
-            await conn.execute(temp_query)
+    check_exists_query = f"""SELECT EXISTS(SELECT 1 FROM module_info WHERE module_name = '{db_upload_dict['module_info']['module_name']}' AND hxb_name = '{db_upload_dict['module_info']['hxb_name']}')"""
+    async with pool.acquire() as conn:
+        exists = await conn.fetchval(check_exists_query)
+    if not bool(exists):
+        module_no = await upload_PostgreSQL(pool, 'module_info', db_upload_dict['module_info'], 'module_no')  
+        today = datetime.now().date()
+        if module_no is not None:
+            module_assembly_dict = db_upload_dict['module_assembly']
+            module_assembly_dict.update({'module_no': module_no})
+            await upload_PostgreSQL(pool, 'module_assembly', module_assembly_dict)
+            proto_name, hxb_name = db_upload_dict['module_info']['proto_name'], db_upload_dict['module_info']['hxb_name']
+            await update_PostgreSQL(pool, 'proto_assembly', {'module_no': module_no}, name_col = 'proto_name', part_name = proto_name )
+            temp_query = f"""UPDATE module_info SET bp_name = proto_assembly.bp_name, sen_name = proto_assembly.sen_name FROM proto_assembly WHERE proto_assembly.proto_name = module_info.proto_name;"""
+            async with pool.acquire() as conn: 
+                await conn.execute(temp_query)
 
-        read_query = f"""SELECT EXISTS(SELECT REPLACE(hxb_name, '-','') FROM hexaboard WHERE REPLACE(hxb_name, '-','') ='{hxb_name}');"""
-        records = await fetch_PostgreSQL(pool, read_query)
-        check = [dict(record) for record in records][0]
-        db_upload_hxb = {'module_no': module_no}
-        if not check['exists']:
-            db_upload_hxb.update({'hxb_name': hxb_name, 'date_verify_received': today})
-            await upload_PostgreSQL(pool, 'hexaboard', db_upload_hxb)
+            read_query = f"""SELECT EXISTS(SELECT REPLACE(hxb_name, '-','') FROM hexaboard WHERE REPLACE(hxb_name, '-','') ='{hxb_name}');"""
+            records = await fetch_PostgreSQL(pool, read_query)
+            check = [dict(record) for record in records][0]
+            db_upload_hxb = {'module_no': module_no}
+            if not check['exists']:
+                db_upload_hxb.update({'hxb_name': hxb_name, 'date_verify_received': today})
+                await upload_PostgreSQL(pool, 'hexaboard', db_upload_hxb)
+            else:
+                await update_PostgreSQL(pool, 'hexaboard', db_upload_hxb, name_col = 'hxb_name', part_name = hxb_name )
         else:
-            await update_PostgreSQL(pool, 'hexaboard', db_upload_hxb, name_col = 'hxb_name', part_name = hxb_name )
-    else:
-        await upload_PostgreSQL(pool, 'module_assembly', db_upload_dict['module_assembly'])
+            await upload_PostgreSQL(pool, 'module_assembly', db_upload_dict['module_assembly'])
     await pool.close()
     return f"Success! for {db_upload_dict['module_info']['proto_name']}"
 
