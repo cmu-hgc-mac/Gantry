@@ -15,24 +15,6 @@
 		<Property Name="NI.ClassItem.Priority" Type="Int">1</Property>
 		<Property Name="NI.ClassItem.State" Type="Int">1619014160</Property>
 	</Item>
-	<Item Name="Autofocus.vi" Type="VI" URL="../../Autofocus.vi">
-		<Property Name="NI.ClassItem.ConnectorPane" Type="Bin">)1#!!!!!!!)!"1!&amp;!!!-!%!!!@````]!!!!"!!%!!!0?!!!!&amp;1#)1(!!'!!!!!%!!!"M176S&lt;X2F9WAO14-S-$!O1W^O&gt;(*P&lt;'RF=CQA176S&lt;X2F9WAO14-S-$!M)&amp;:F=H.J&lt;WY^-#YQ,D!O-#QA1X6M&gt;(6S:4VO:86U=G&amp;M,#"1&gt;7*M;7.,:8F5&lt;WNF&lt;DUU.TBF.T)X-4FD-T)X-T6F$7.P&lt;H2S&lt;WRM:8)A;7Y!&amp;%!B$E&amp;C&lt;X*U186U&lt;U:P9X6T!!!A!$@`````!!5B!)!!!!!!!1!%!!!!!1!!!!!!!!!!!&amp;5!]1!!!!!!!!!"$EF.16%A37VB:W5O9X2M!$Z!=!!&gt;#5F.16&amp;*&lt;7&amp;H:1!"!!)*35V"55FN97&gt;F)1#!!!!!!!%!"!!!!!%!!!!!!!!(37VB:W6*&lt;A!%!!!!CE"Q!"A!!!!"!!!!&lt;%&amp;F=G^U:7.I,E%T-D!Q,E.P&lt;H2S&lt;WRM:8)M)%&amp;F=G^U:7.I,E%T-D!Q,#"7:8*T;7^O04!O-#YQ,D!M)%.V&lt;(2V=G5^&lt;G6V&gt;(*B&lt;#QA5(6C&lt;'FD3W6Z6'^L:7Y^.$=Y:4=S.T%Z9T-S.T-V:1ZD&lt;WZU=G^M&lt;'6S)'^V&gt;!!!$U!+!!B497:F47&amp;Y7A!!51$R!!!!!!!!!!%/35V"53"*&lt;7&amp;H:3ZD&gt;'Q!/E"Q!"U*35V"55FN97&gt;F!!!*35V"55FN97&gt;F)1#!!!!!!!%!"!!!!!%!!!!!!!!&amp;37VB:W5!&amp;5!+!!^*&lt;GFU;7&amp;M5X2F=&amp;.J?G5!%U!+!!R/8WFU:8*B&gt;'FP&lt;H-!!!^!#A!*6'^M:8*B&lt;G.F!"&amp;!#A!+1G6T&gt;&amp;JW97RV:1!!$%!B"H.U982V=Q!!#U!$!!2D&lt;W2F!!!11$$`````"H.P&gt;8*D:1!!)%"1!!-!$!!.!!Y4:8*S&lt;X)A;7YA+'ZP)'6S=G^S+1!G!$@`````!!5B!)!!!!!!!1!%!!!!!1!!!!!!!!:*45&amp;2:(A!!%]!]&gt;U&gt;]11!!!!"#EF.16&amp;E?#ZD&gt;'Q!0%"Q!"5'35V"572Y!!!"!"!'35V"572Y!#%!A!!!!!!"!!1!!!!"!!!!!!!!#6.F=X.J&lt;WZ*&lt;A"2!0(&gt;(@%%!!!!!1J*45&amp;2:(AO9X2M!$Z!=!!6"EF.16&amp;E?!!!!1!1"EF.16&amp;E?!!B!)!!!!!!!1!%!!!!!1!!!!!!!!N4:8.T;7^O)%^V&gt;!!71&amp;!!!Q!-!!U!$AFF=H*P=C"P&gt;81!&lt;!$Q!"!!!!!"!!-!"!!&amp;!!9!"Q!)!!E!#A!,!!]!%1!%!")!%Q-!!1A!!!A!!!!+!!!!#A!!!!!!!!!.!!!!#A!!!!U#!!!+!!!!#1!!!!I!!!!*!!!!#A!!!!A!!!!!!!!!#1!!!!U,!!!!!1!5!!!!!!</Property>
-		<Property Name="NI.ClassItem.ExecutionSystem" Type="Int">-1</Property>
-		<Property Name="NI.ClassItem.Flags" Type="Int">1074004224</Property>
-		<Property Name="NI.ClassItem.IsStaticMethod" Type="Bool">true</Property>
-		<Property Name="NI.ClassItem.MethodScope" Type="UInt">1</Property>
-		<Property Name="NI.ClassItem.Priority" Type="Int">1</Property>
-		<Property Name="NI.ClassItem.State" Type="Int">1082143248</Property>
-	</Item>
-	<Item Name="AutofocusOptions.vi" Type="VI" URL="../../AutofocusOptions.vi">
-		<Property Name="NI.ClassItem.ConnectorPane" Type="Bin">)1#!!!!!!!)!"1!&amp;!!!-!%!!!@````]!!!!"!!%!!!"A!!!!!A!%!!!!6!$Q!!Q!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!$!!"Y!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1!"!!!!!!</Property>
-		<Property Name="NI.ClassItem.ExecutionSystem" Type="Int">-1</Property>
-		<Property Name="NI.ClassItem.Flags" Type="Int">262402</Property>
-		<Property Name="NI.ClassItem.IsStaticMethod" Type="Bool">true</Property>
-		<Property Name="NI.ClassItem.MethodScope" Type="UInt">1</Property>
-		<Property Name="NI.ClassItem.Priority" Type="Int">1</Property>
-		<Property Name="NI.ClassItem.State" Type="Int">1082929680</Property>
-	</Item>
 	<Item Name="Calibrate.vi" Type="VI" URL="../../Calibrate.vi">
 		<Property Name="NI.ClassItem.ConnectorPane" Type="Bin">)1#!!!!!!!)!"1!&amp;!!!-!%!!!@````]!!!!"!!%!!!"A!!!!!A!%!!!!6!$Q!!Q!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!$!!"Y!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1!"!!!!!!</Property>
 		<Property Name="NI.ClassItem.ExecutionSystem" Type="Int">-1</Property>
