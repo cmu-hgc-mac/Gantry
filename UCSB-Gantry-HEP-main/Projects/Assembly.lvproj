@@ -490,10 +490,6 @@
 			<Item Name="LV Config Read String.vi" Type="VI" URL="/&lt;resource&gt;/dialog/lvconfig.llb/LV Config Read String.vi"/>
 			<Item Name="Aerotech.lvlib" Type="Library" URL="../../Drivers/Aerotech A3200/Aerotech.lvlib"/>
 			<Item Name="EFD Ultimus V.lvlib" Type="Library" URL="../../Drivers/EFD Ultimus V/EFD Ultimus V.lvlib"/>
-			<Item Name="AddError.vi" Type="VI" URL="../../Main VIs/AddError.vi"/>
-			<Item Name="Move.vi" Type="VI" URL="../../Main VIs/include/Move.vi"/>
-			<Item Name="GetHeightDistanceSensor.vi" Type="VI" URL="../../Main VIs/include/GetHeightDistanceSensor.vi"/>
-			<Item Name="PythonPlotter.vi" Type="VI" URL="../../Main VIs/Utilities/PythonPlotter.vi"/>
 			<Item Name="ToPythonVersionString.vi" Type="VI" URL="../../../../../../../../Program Files (x86)/National Instruments/LabVIEW 2021/examples/Connectivity/Python/support/ToPythonVersionString.vi"/>
 			<Item Name="Aerotech.A3200.dll" Type="Document" URL="../../../../../../../../Program Files (x86)/Aerotech/A3200/LabVIEW/2010/Bin/Aerotech.A3200.dll"/>
 			<Item Name="Aerotech.A3200.LabVIEW.dll" Type="Document" URL="../../../../UCSB-Gantry-HEP/Drivers/Aerotech A3200/Bin/Aerotech.A3200.LabVIEW.dll"/>
