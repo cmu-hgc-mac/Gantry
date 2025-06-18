@@ -43,9 +43,16 @@ def build_XYZU(reshape_input):
     XYZU = []
     for item in XYZ:            ### get average of each axis value
         XYZU.append(Average(item))
-    XYZU.append(get_angle(reshape_input[2],reshape_input[0]))     ### get angle between CH 81 and 95 for sensor or FD3 and FD6 for hexaboard
+    FD1_5 = setup_rotation(get_angle(reshape_input[1],reshape_input[0]))
+    FD1_2 = setup_rotation(get_angle(reshape_input[2],reshape_input[0]))
+    FD4_2 = setup_rotation(get_angle(reshape_input[2],reshape_input[3]))
+    FD4_5 = setup_rotation(get_angle(reshape_input[1],reshape_input[3]))
+    FD_angles = [FD1_5,FD1_2,FD4_2,FD4_5]
+    #XYZU.append(get_angle(reshape_input[2],reshape_input[0]))     ### get angle between CH 81 and 95 for sensor or FD3 and FD6 for hexaboard
+    XYZU.append(Average(FD_angles))     ### get average of all possible angles instead of just one angle
     distance = sqrt(((X[0]-X[1])**2)+((Y[0]-Y[1])**2))
-    return XYZU, distance
+    CH1_8_rotation = get_angle(reshape_input[2],reshape_input[0])
+    return XYZU, distance, CH1_8_rotation
 
 ### Main LV function    
 def calculate_center(input, position, adjustment, left_handed):
@@ -58,15 +65,14 @@ def calculate_center(input, position, adjustment, left_handed):
             reshape_input.append(XYZ)
             XYZ = []
         i += 1
-    center, distance = build_XYZU(reshape_input)  ### get center coordinates
-    CH1 = get_CH_1(center,distance)
+    center, distance, CH1_8_rotation = build_XYZU(reshape_input)  ### get center coordinates
+    CH1 = get_CH_1(center,distance,CH1_8_rotation)
     CH1.append(0)
-    ID = get_ID(center)
+    ID = get_ID(center,CH1_8_rotation)
     ID.append(0)
-    print(center[3])
-    center[3] = setup_rotation(center[3])
+    #print(center[3])
+    #center[3] = setup_rotation(center[3])
     return([center,CH1,ID])
-
 
 
 ##### For Hexaboard LD Right, LD Left and LD Five
@@ -79,9 +85,9 @@ def build_XYZU_adjY_axisX(reshape_input, position, adjustment, left_handed):
     Y = []
     Z = []
     #left_handed = 1
-    if (position == 1) or (position == 3):
+    if position == 0:
         adj = adjustment
-    if (position == 2) or (position == 4):
+    if position == 1:
         adj = -adjustment
     for item in reshape_input:
         X.append(item[0])
@@ -144,9 +150,9 @@ def build_XYZU_adjY_axisY(reshape_input, position, adjustment, left_handed):
     X = []                      ### get separate each axis value to get overall average
     Y = []
     Z = []
-    if (position == 1) or (position == 3):
+    if position == 0:
         adj = adjustment
-    if (position == 2) or (position == 4):
+    if position == 1:
         adj = -adjustment
     for item in reshape_input:
         X.append(item[0])
@@ -200,9 +206,9 @@ def build_XYZU_adjX_axisY(reshape_input, position, adjustment, left_handed):
     X = []                      ### get separate each axis value to get overall average
     Y = []
     Z = []
-    if (position == 1) or (position == 3):
+    if position == 0:
         adj = adjustment
-    if (position == 2) or (position == 4):
+    if position == 1:
         adj = -adjustment
     for item in reshape_input:
         X.append(item[0] + adj)
@@ -252,17 +258,17 @@ def calculate_center_adjX_axisY(input, position, adjustment, left_handed):
 def polar_to_XY(r,theta):
     return ([r * cos(theta), r * sin(theta)])
 
-def get_CH_1(center, distance):
+def get_CH_1(center, distance, CH1_8_rotation):
     if distance <165:      ### check for sensor vs HB fiducials, default to sensor
-        XY = polar_to_XY(87.938,radians(62.903) + center[3])      ### CH1 is radius 87.938 mm at (62.903 degrees + rotation) relative to the center for the HB
+        XY = polar_to_XY(87.938,radians(62.903) + CH1_8_rotation)      ### CH1 is radius 87.938 mm at (62.903 degrees + rotation) relative to the center for the HB
     else:
-        XY = polar_to_XY(87.16,radians(61.215) + center[3])      ### CH1 is radius 87.16 mm at (61.215 degrees + rotation) relative to the center for the sensor
+        XY = polar_to_XY(87.16,radians(61.215) + CH1_8_rotation)      ### CH1 is radius 87.16 mm at (61.215 degrees + rotation) relative to the center for the sensor
     CH1_XYZ = [XY[0]+center[0],XY[1]+center[1]]        ### add center XY to get absolute value on gantry
     CH1_XYZ.append(center[2])
     return CH1_XYZ
 
-def get_ID(center):
-    XY = polar_to_XY(83.104,radians(270-1.134) + center[3])      ### ID is radius 82mm at (270 degrees + rotation) relative to the center
+def get_ID(center, CH1_8_rotation):
+    XY = polar_to_XY(83.104,radians(270-1.134) + CH1_8_rotation)      ### ID is radius 82mm at (270 degrees + rotation) relative to the center
     ID_XYZ = [XY[0]+center[0],XY[1]+center[1]]        ### add center XY to get absolute value on gantry
     ID_XYZ.append(center[2])
     return ID_XYZ
@@ -272,11 +278,19 @@ def get_ID(center):
 
 
 
+### Sensor test input
+# input = [42.576890, 851.096759, 79.622813,
+#          208.560966, 850.918079, 79.562735,
+#          42.499100, 775.098771, 79.623076,
+#          208.483662, 774.919625, 79.574570]
 
-#input = [42.792827, 795.474849, 51.0,
-#         42.792827, 795.474849, 51.0,
-#         206.831202, 794.569494, 51.1,
-#         206.831202, 794.569494, 51.1]
+### HB test input
+# input = [493.758106, 847.146316, 71.880854,
+#          653.741481, 847.002663, 71.670719,
+#          493.702340, 777.163714, 71.991235,
+#          653.681828, 777.017050, 71.645265]
+
+# print(calculate_center(input,0,0,0))
 
 #input = [42.973427, 794.203312, 51.0,
 #         42.973427, 794.203312, 51.0,

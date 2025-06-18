@@ -16,10 +16,10 @@ def fiducial_prediction(assembly_type, pos, new_fds, old_fds):
     else:
         return old_fds
     ### Negate X or Y, depending on pos 1 or 2
-    if pos == 1:
+    if pos == 0:
         x_sign = 1
         y_sign = -1
-    elif pos == 2:
+    elif pos == 1:
         x_sign = -1
         y_sign = 1
     else:
