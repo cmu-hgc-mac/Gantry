@@ -59,7 +59,9 @@ def assembly_data_as_list(conn_info=[], ass_data_list = []):
                     "comment", 
                     "temp_c", 
                     "rel_hum",
-                    "sen_grade"]  ### "grade" refers to sensor grade    
+                    "sen_grade", ### "grade" refers to sensor grade
+                    "roc_version",
+                    "bp_material",]      
     if ass_data_list:
         dictinit = {db_data_cols[i] : ass_data_list[i] for i in range(len(ass_data_list))}
         if (len(str(dictinit['base_layer_id'])) != 0) and (len(str(dictinit['top_layer_id'])) != 0):  ### dummy runs don't get saved
@@ -78,7 +80,7 @@ def assembly_data_as_list(conn_info=[], ass_data_list = []):
             inst_code_dict = {'CM':'CMU', 'SB':'UCSB','IH':'IHEP', 'NT':'NTU', 'TI':'TIFR', 'TT':'TTU'}
             sensor_thickness_dict = {'1': 120, '2': 200, '3': 300}
             bp_material_dict = {'W': 'CuW', 'P': 'PCB', 'T': 'Titanium', 'C': 'Carbon fiber'}
-            roc_version_dict = {'X': 'Preseries', '2': 'HGCROCV3b-2', '4': 'HGCROCV3b-4','C': 'HGCROCV3c',}
+            roc_version_dict = {'X': 'Preseries', '2': 'HGCROCV3b-2', '4': 'HGCROCV3b-4','C': 'HGCROCV3c','D': 'HGCROCV3d', 'E': 'HGCROCV3e', 'F': 'HGCROCV3f'}
             
             pos_col, pos_row = get_col_row(int(dictinit['bl_position']))
             dictinit['comment'] = f"{dictinit['comment']}; " if dictinit['comment'] else None
@@ -137,12 +139,12 @@ def assembly_data_as_list(conn_info=[], ass_data_list = []):
                                 'hxb_name': dictinit['top_layer_id'], 
                                 'geometry' : dictinit['geometry'], 
                                 'resolution': dictinit['resolution'],
+                                'roc_version': dictinit['roc_version'],
+                                'bp_material': dictinit['bp_material'],
                                 'assembled': dictinit['ass_run_date']}
                 try:
-                    db_upload_info.update({'bp_material': bp_material_dict[(dictinit['stack_name'].replace("-",""))[7]],
-                                        'sen_thickness': sensor_thickness_dict[(dictinit['stack_name'].replace("-",""))[6]],
-                                        'institution': inst_code_dict[(dictinit['stack_name'].replace("-",""))[9:11]],   
-                                        'roc_version': roc_version_dict[(dictinit['stack_name'].replace("-",""))[8]]})
+                    db_upload_info.update({'sen_thickness': sensor_thickness_dict[(dictinit['stack_name'].replace("-",""))[6]],
+                                        'institution': inst_code_dict[(dictinit['stack_name'].replace("-",""))[9:11]],   })
                 except: print('Check module name again. Code incomplete.')
                 db_upload_dict = {db_table_name: db_upload, 'module_info': db_upload_info}
             try:
