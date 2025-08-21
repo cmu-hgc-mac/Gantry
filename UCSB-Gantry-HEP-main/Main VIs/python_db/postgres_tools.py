@@ -162,21 +162,33 @@ def get_thickness_from_db(conn_info = [], base_layer_ids = [], ass_type = 'modul
         prefix = 'bp'
         table_name = 'baseplate'
         tracker_col = 'proto_no'
-        cols = [f'{prefix}_name', 'thickness', 'flatness', 'grade', 'comment']
-        default_data = ['', 0.0, 0.0, False, None]
+        cols = [f'{prefix}_name', 'avg_thickness', 'max_thickness', 'flatness','inspect_comment','baseplate_comment','avg_thickness_init','max_thickness_init','flatness_init','inspect_grade','flatness_grade','tolerance_grade']
+        default_data = ['', 0.0, 0.0, 0.0, None, None, 0.0, 0.0, 0.0, False, False, False]
         pk_name = 'bp_row_no'
+        query = f"""SELECT DISTINCT ON (COALESCE(REPLACE(bp_inspect.bp_name,'-',''), REPLACE(baseplate.bp_name,'-',''))) COALESCE(REPLACE(bp_inspect.bp_name,'-',''), REPLACE(baseplate.bp_name,'-','')) AS bp_name,
+            bp_inspect.avg_thickness,
+            bp_inspect.max_thickness,
+            bp_inspect.flatness,
+            bp_inspect.comment AS inspect_comment,
+            baseplate.comment AS baseplate_comment,
+            baseplate.avg_thickness_init,
+            baseplate.max_thickness_init,
+            baseplate.flatness_init,
+            bp_inspect.grade AS inspect_grade,
+            baseplate.flatness_grade,
+            baseplate.tolerance_grade
+        FROM bp_inspect FULL OUTER JOIN baseplate
+        ON REPLACE(bp_inspect.bp_name,'-','') = REPLACE(baseplate.bp_name,'-','') WHERE COALESCE(REPLACE(bp_inspect.bp_name,'-',''), REPLACE(baseplate.bp_name,'-','')) = ANY($1) ORDER BY bp_name, bp_inspect.bp_row_no DESC NULLS LAST;"""
     elif ass_type == 'module':
         prefix = 'proto'
         pk_name = 'proto_row_no'
         cols = [f'{prefix}_name', 'avg_thickness', 'max_thickness', 'flatness', 'x_offset_mu', 'y_offset_mu', 'ang_offset_deg', 'grade', 'comment']
         default_data = ['', 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, False, None]
+        query = f"""SELECT DISTINCT ON (REPLACE({prefix}_name,'-','')) REPLACE({prefix}_name,'-','') as {prefix}_name, {', '.join([col for col in cols[1:]])}
+            FROM {prefix}_inspect WHERE REPLACE({prefix}_name,'-','') = ANY($1) ORDER BY {prefix}_name, {pk_name} DESC;"""
     
-    default_return = {col: [str(default_data[c]) for part in base_layer_ids] for c, col in enumerate(cols)}
-    
+    default_return = {col: [str(default_data[c]) for part in base_layer_ids] for c, col in enumerate(cols)}    
     base_layer_ids = [i.replace('-','') for i in base_layer_ids]
-    query = f"""SELECT DISTINCT ON (REPLACE({prefix}_name,'-','')) REPLACE({prefix}_name,'-','') as {prefix}_name, {', '.join([col for col in cols[1:]])}
-        FROM {prefix}_inspect WHERE REPLACE({prefix}_name,'-','') = ANY($1) ORDER BY {prefix}_name, {pk_name} DESC;"""
-
     try:
         rows = asyncio.run(read_val_from_db(conn_info, query=query, val=base_layer_ids))
     except:
