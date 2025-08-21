@@ -251,20 +251,30 @@ def check_toplayer_in_db(conn_info = [], top_layer_ids = [], ass_type = 'module'
         table_name = 'sensor'
         inspect_table_name = 'sensor'
         pk_name = 'sen_no'
+        query = f"""SELECT DISTINCT ON (REPLACE({prefix}_name,'-','')) REPLACE({prefix}_name,'-','') as {prefix}_name, {', '.join([col for col in cols[1:]])}
+        FROM {inspect_table_name} WHERE REPLACE({prefix}_name,'-','') = ANY($1) ORDER BY {prefix}_name, {pk_name} DESC;"""
     elif ass_type == 'module':
         prefix = 'hxb'
         table_name = 'hexaboard'
         tracker_col = 'module_no'
-        cols = [f'{prefix}_name', 'thickness',  'flatness', 'grade', 'comment']
-        default_data = ['', 0.0, 0.0, False, None]
         inspect_table_name = 'hxb_inspect'
         pk_name = 'hxb_row_no'
+        cols = [f'{prefix}_name','roc_version','avg_thickness','max_thickness','flatness','inspect_grade','inspect_comment','hexaboard_comment']
+        default_data = ['', '', 0.0, 0.0, 0.0, False, None, None]
+        query = f"""SELECT DISTINCT ON (COALESCE(REPLACE(hxb_inspect.hxb_name,'-',''), REPLACE(hexaboard.hxb_name,'-',''))) COALESCE(REPLACE(hxb_inspect.hxb_name,'-',''), REPLACE(hexaboard.hxb_name,'-','')) AS hxb_name,
+            hxb_inspect.avg_thickness,
+            hxb_inspect.max_thickness,
+            hxb_inspect.flatness,
+            hxb_inspect.grade AS inspect_grade,
+            hxb_inspect.comment AS inspect_comment,
+            hexaboard.comment AS hexaboard_comment,
+            hexaboard.roc_version
+        FROM hxb_inspect FULL OUTER JOIN hexaboard
+        ON REPLACE(hxb_inspect.hxb_name,'-','') = REPLACE(hexaboard.hxb_name,'-','') WHERE COALESCE(REPLACE(hxb_inspect.hxb_name,'-',''), REPLACE(hexaboard.hxb_name,'-','')) = ANY($1) ORDER BY hxb_name, hxb_inspect.hxb_row_no DESC NULLS LAST;"""
+
     
-    default_return = {col: [str(default_data[c]) for part in top_layer_ids] for c, col in enumerate(cols)}
-    
+    default_return = {col: [str(default_data[c]) for part in top_layer_ids] for c, col in enumerate(cols)}    
     top_layer_ids = [i.replace('-','') for i in top_layer_ids]
-    query = f"""SELECT DISTINCT ON (REPLACE({prefix}_name,'-','')) REPLACE({prefix}_name,'-','') as {prefix}_name, {', '.join([col for col in cols[1:]])}
-        FROM {inspect_table_name} WHERE REPLACE({prefix}_name,'-','') = ANY($1) ORDER BY {prefix}_name, {pk_name} DESC;"""
 
     try:
         rows = asyncio.run(read_val_from_db(conn_info, query=query, val=top_layer_ids))
