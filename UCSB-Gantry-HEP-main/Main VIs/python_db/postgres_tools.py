@@ -140,10 +140,10 @@ def assembly_data_as_list(conn_info=[], ass_data_list = []):
                                 'geometry' : dictinit['geometry'], 
                                 'resolution': dictinit['resolution'],
                                 'roc_version': dictinit['roc_version'],
-                                'bp_material': dictinit['bp_material'],
                                 'assembled': dictinit['ass_run_date']}
                 try:
                     db_upload_info.update({'sen_thickness': sensor_thickness_dict[(dictinit['stack_name'].replace("-",""))[6]],
+                                           'bp_material': bp_material_dict[(dictinit['stack_name'].replace("-",""))[7]],  #### Use this instead of LabVIEW default to help Grafana filters.
                                         'institution': inst_code_dict[(dictinit['stack_name'].replace("-",""))[9:11]],   })
                 except: print('Check module name again. Code incomplete.')
                 db_upload_dict = {db_table_name: db_upload, 'module_info': db_upload_info}
