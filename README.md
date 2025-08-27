@@ -80,7 +80,7 @@ conn = asyncio.run(asyncpg.connect(
         user='gantry_user'))
 print('Connection successful!')
 </pre>
-- **Test connection with LabVIEW**: Run `Main VIs/python_db/check_db_conn.vi` to troubleshoot python, database, and LabVIEW interconnection.
+- **Test connection with LabVIEW**: Open `Main VIs/python_db/check_db_conn.vi` from the `Assembly.lvproj` Project Explorer and run it to troubleshoot python, database, and LabVIEW interconnection.
 - To check if the config file path is being read in correctly, run `Main VIs\python_db\postgres_tools.py`.
 
 # Debugging
