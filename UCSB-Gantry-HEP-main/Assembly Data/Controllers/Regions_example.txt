@@ -1,0 +1,3 @@
+assembly_tray	1
+component_tray	2
+pick_up_tool	3
