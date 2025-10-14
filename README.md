@@ -35,6 +35,7 @@ user_password
   - If prompted to locate the file Aerotech.A3200.dll, select the file located under C:\Program Files (x86)\Aerotech\A3200\LabVIEW\2010\Bin. This DLL file links your gantry to the LV files.
   - Camera Setup: Refer to [slides 5 through 13 for details.](https://docs.google.com/presentation/d/18fChS6HMetSQ2EqdEWxNJkBMLUD8UyrRc5J06kykISw/edit#slide=id.g2587e3bfd54_0_32) In the Controllers folder, open Screen.txt. Change these values to match the result of camera calibration.
 3. Assembly Tray inputs: Refer to slides 18 and 19.
+     - For Assembly Tray and PUT naming convention, refer to the [NamingOfPUTandTrays Google spreadsheet](https://docs.google.com/spreadsheets/d/16cv6opxkLJgKQaDGyoZya-IPyUAJNSmRbptk8E18XYY/edit?usp=sharing).
 4. Pick Up Tool (PUT) locations
   - Each PUT has three spacers with pins for loading. Place the PUT over its designated loading pins and ensure that the pins are flush with the PUT. If not, loosen the spacers a little. Place the PUT on the pins and align with the locator blocks.
   - Use Joystick and Camera.vi to obtain XYZ coordinates of the three pins. Find the average X, Y, and Z of each PUT loading area.
