@@ -6,12 +6,12 @@ Region Sensors [0]	3
 Region Sensors [1]	4
 Region Sensors [2]	-1
 Region Sensors [3]	-1
-Region 1 pos 1 o ring sensor	5
-Region 1 pos 2 o ring sensor	6
-Region 1 pos 3 o ring sensor	7
-Region 1 pos 4 o ring sensor	8
-Region 2 pos 1 Si/PCB sensor	9
-Region 2 pos 2 Si/PCB sensor	10
-Region 2 pos 1 Si/PCB sensor	11
-Region 2 pos 2 Si/PCB sensor	12
+Region 1 pos 1 o ring	5
+Region 1 pos 2 o ring	6
+Region 1 pos 3 o ring	7
+Region 1 pos 4 o ring	8
+Region 2 pos 1 Si/PCB	9
+Region 2 pos 2 Si/PCB	10
+Region 2 pos 3 Si/PCB	11
+Region 2 pos 4 Si/PCB	12
 Dispenser   31

@@ -65,8 +65,9 @@ def calculate_center(input, position, adjustment, left_handed):
             reshape_input.append(XYZ)
             XYZ = []
         i += 1
+    CH1_Z = reshape_input[0][2]
     center, distance, CH1_8_rotation = build_XYZU(reshape_input)  ### get center coordinates
-    CH1 = get_CH_1(center,distance,CH1_8_rotation)
+    CH1 = get_CH_1(center,distance,CH1_8_rotation,CH1_Z)
     CH1.append(0)
     ID = get_ID(center,CH1_8_rotation)
     ID.append(0)
@@ -258,19 +259,18 @@ def calculate_center_adjX_axisY(input, position, adjustment, left_handed):
 def polar_to_XY(r,theta):
     return ([r * cos(theta), r * sin(theta)])
 
-def get_CH_1(center, distance, CH1_8_rotation):
+def get_CH_1(center, distance, CH1_8_rotation, CH1_Z):
     if distance <165:      ### check for sensor vs HB fiducials, default to sensor
         XY = polar_to_XY(87.938,radians(62.903) + CH1_8_rotation)      ### CH1 is radius 87.938 mm at (62.903 degrees + rotation) relative to the center for the HB
     else:
-        XY = polar_to_XY(87.16,radians(61.215) + CH1_8_rotation)      ### CH1 is radius 87.16 mm at (61.215 degrees + rotation) relative to the center for the sensor
-    CH1_XYZ = [XY[0]+center[0],XY[1]+center[1]]        ### add center XY to get absolute value on gantry
-    CH1_XYZ.append(center[2])
+        XY = polar_to_XY(87.16,radians(61) + CH1_8_rotation)      ### CH1 is radius 87.16 mm at (61.215 degrees + rotation) relative to the center for the sensor
+    CH1_XYZ = [XY[0]+center[0],XY[1]+center[1],CH1_Z]        ### add center XY to get absolute value on gantry and use CH1 fiducial Z
     return CH1_XYZ
 
 def get_ID(center, CH1_8_rotation):
     XY = polar_to_XY(83.104,radians(270-1.134) + CH1_8_rotation)      ### ID is radius 82mm at (270 degrees + rotation) relative to the center
     ID_XYZ = [XY[0]+center[0],XY[1]+center[1]]        ### add center XY to get absolute value on gantry
-    ID_XYZ.append(center[2])
+    ID_XYZ.append(center[2])    ### Use average Z
     return ID_XYZ
 
 
