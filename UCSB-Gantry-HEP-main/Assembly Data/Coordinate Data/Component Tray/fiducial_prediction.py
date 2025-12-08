@@ -19,7 +19,7 @@ def adjust_rotation(angle):
     return rotation
     
 
-def fiducial_prediction(assembly_type, pos, new_fds, old_fds, init_rotation):
+def fiducial_prediction(assembly_type, pos, new_fds, old_fds, rotations):
     ### Define fiducial distances based on whether module or protomodule
     distances = []
     predicted = [[0,0,0],[0,0,0],[0,0,0],[0,0,0]]
@@ -61,14 +61,17 @@ def fiducial_prediction(assembly_type, pos, new_fds, old_fds, init_rotation):
         CH197 = CHs[3]
         x_distance = x_sign*distances[0]
         y_distance = y_sign*distances[1]
-        rotation = adjust_rotation(init_rotation)
+        rotation = adjust_rotation(rotations[-1])
         if not CH1:
             return old_fds
         else:
             predicted[0] = CH1
             Z_diff = round(CH1[2]-old_fds[0][2],1) ### check Z compared to previously fiducials to check for 200/300 um sensor
         if not CH8:
-            CH8 = [CH1[0]+y_distance*sin(rotation),CH1[1]+y_distance*cos(rotation), old_fds[2][2]+Z_diff]
+            if (len(rotations) > 1):
+                CH8 = [CH1[0]+y_distance*sin(rotation),CH1[1]+y_distance*cos(rotation), old_fds[2][2]+Z_diff]
+            else:
+                CH8 = [CH1[0],CH1[1]+y_distance, old_fds[2][2]+Z_diff]
         else:
             rotation = adjust_rotation(atan2((CH8[1]-CH1[1]),(CH8[0]-CH1[0])))
         predicted[2] = CH8
@@ -88,7 +91,7 @@ def fiducial_prediction(assembly_type, pos, new_fds, old_fds, init_rotation):
 #res = fiducial_prediction('Protomodule LD Full', 0, [41.438762, 851.012194, 79.526488, 0, 0, 0, 42.050709, 775.016558, 79.526465, 0, 0, 0], [41.438762, 851.012194, 79.526488, 207.417864, 852.334928, 79.456480, 42.050709, 775.016558, 79.526465, 208.029164, 776.339373, 79.454066],-1.04968)
 #res = fiducial_prediction('Protomodule LD Full', 0, [41.438762, 851.012194, 79.526488, 207.417864, 852.334928, 79.456480, 42.050709, 775.016558, 79.526465, 0, 0, 0], [41.438762, 851.012194, 79.526488, 207.417864, 852.334928, 79.456480, 42.050709, 775.016558, 79.526465, 208.029164, 776.339373, 79.454066],-1.04968)
 
-res = fiducial_prediction('Protomodule LD Full', 0, [43.5748, 852.603, 79.5095, 0, 0, 0, 0, 0, 0, 0, 0, 0], [[41.590141, 849.715210, 79.519510], [207.553262, 852.426136, 79.469729], [42.837366, 773.726273, 79.494661], [208.800131, 776.437027, 79.469751]],-1.57537)
+res = fiducial_prediction('Protomodule LD Full', 0, [41.590141, 849.715210, 79.519510, 0, 0, 0, 0, 0, 0, 0, 0, 0], [[41.590141, 849.715210, 79.519510], [207.553262, 852.426136, 79.469729], [42.837366, 773.726273, 79.494661], [208.800131, 776.437027, 79.469751]],[-1.57537,-1.56])
 
 
 print(res)
