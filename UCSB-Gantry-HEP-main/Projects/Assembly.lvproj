@@ -10,6 +10,7 @@
 	<Property Name="varPersistentID:{911F54FE-7D6B-40E8-B66C-5251210AAAA9}" Type="Ref">/My Computer/Classes/Fixture/Component Tray.lvclass/Helpers/Average Strength</Property>
 	<Property Name="varPersistentID:{A6BBBAB5-8B65-4B9C-B29C-5632DC84DEA1}" Type="Ref">/My Computer/Classes/Fixture/Component Tray.lvclass/Helpers/Instructions</Property>
 	<Property Name="varPersistentID:{C1090B60-AD81-444F-AA33-6F7541266A25}" Type="Ref">/My Computer/Classes/Fixture/Component Tray.lvclass/Helpers/Camera</Property>
+	<Property Name="varPersistentID:{DFDC0D42-6CA9-4B72-939C-83000F794174}" Type="Ref">/My Computer/Classes/Fixture/Component Tray.lvclass/Helpers/Manual Mode</Property>
 	<Item Name="My Computer" Type="My Computer">
 		<Property Name="NI.SortType" Type="Int">3</Property>
 		<Property Name="server.app.propertiesEnabled" Type="Bool">true</Property>
