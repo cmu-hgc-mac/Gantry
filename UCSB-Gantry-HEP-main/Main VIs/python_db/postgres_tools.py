@@ -164,8 +164,8 @@ def get_thickness_from_db(conn_info = [], base_layer_ids = [], ass_type = 'modul
         prefix = 'bp'
         table_name = 'baseplate'
         tracker_col = 'proto_no'
-        cols = [f'{prefix}_name', 'avg_thickness', 'max_thickness', 'flatness','inspect_comment','baseplate_comment','avg_thickness_init','max_thickness_init','flatness_init','inspect_grade','flatness_grade','tolerance_grade']
-        default_data = ['', 0.0, 0.0, 0.0, None, None, 0.0, 0.0, 0.0, False, False, False]
+        cols = [f'{prefix}_name', 'avg_thickness', 'max_thickness', 'flatness','inspect_comment','baseplate_comment','avg_thickness_init','max_thickness_init','flatness_init','inspect_grade','flatness_grade','tolerance_grade','obsolete']
+        default_data = ['', 0.0, 0.0, 0.0, None, None, 0.0, 0.0, 0.0, False, False, False,False]
         pk_name = 'bp_row_no'
         query = f"""SELECT DISTINCT ON (COALESCE(REPLACE(bp_inspect.bp_name,'-',''), REPLACE(baseplate.bp_name,'-',''))) COALESCE(REPLACE(bp_inspect.bp_name,'-',''), REPLACE(baseplate.bp_name,'-','')) AS bp_name,
             bp_inspect.avg_thickness,
@@ -178,7 +178,8 @@ def get_thickness_from_db(conn_info = [], base_layer_ids = [], ass_type = 'modul
             baseplate.flatness_init,
             bp_inspect.grade AS inspect_grade,
             baseplate.flatness_grade,
-            baseplate.tolerance_grade
+            baseplate.tolerance_grade,
+            baseplate.obsolete
         FROM bp_inspect FULL OUTER JOIN baseplate
         ON REPLACE(bp_inspect.bp_name,'-','') = REPLACE(baseplate.bp_name,'-','') WHERE COALESCE(REPLACE(bp_inspect.bp_name,'-',''), REPLACE(baseplate.bp_name,'-','')) = ANY($1) ORDER BY bp_name, bp_inspect.bp_row_no DESC NULLS LAST;"""
     elif ass_type == 'module':
@@ -219,9 +220,16 @@ def get_thickness_from_db(conn_info = [], base_layer_ids = [], ass_type = 'modul
             for row2 in rows2:
                 index = base_layer_ids.index(row2[f'{prefix}_name'])
                 status_list[index] = 'unused' if not row2[f"{ass_type}_name"] else f"{row2[f'{ass_type}_name'][5:9]}-{row2[f'{ass_type}_name'][-4:]}"
+
         cols.insert(1,'status')
         default_return['status'] = status_list
 
+        if type(rows) is list:
+            for row in rows:
+                index = base_layer_ids.index(row[f'{prefix}_name'])
+                if rows[index]['obsolete']:
+                    status_list[index] = 'obsolete'
+        
     return_list = [cols] + [[default_return[col][i] for col in cols] for i in range(len(base_layer_ids))]
     return return_list
 
@@ -261,8 +269,8 @@ def check_toplayer_in_db(conn_info = [], top_layer_ids = [], ass_type = 'module'
         tracker_col = 'module_no'
         inspect_table_name = 'hxb_inspect'
         pk_name = 'hxb_row_no'
-        cols = [f'{prefix}_name','roc_version','avg_thickness','max_thickness','flatness','inspect_grade','inspect_comment','hexaboard_comment']
-        default_data = ['', '', 0.0, 0.0, 0.0, False, None, None]
+        cols = [f'{prefix}_name','roc_version','avg_thickness','max_thickness','flatness','inspect_grade','inspect_comment','hexaboard_comment','obsolete']
+        default_data = ['', '', 0.0, 0.0, 0.0, False, None, None,False]
         query = f"""SELECT DISTINCT ON (COALESCE(REPLACE(hxb_inspect.hxb_name,'-',''), REPLACE(hexaboard.hxb_name,'-',''))) COALESCE(REPLACE(hxb_inspect.hxb_name,'-',''), REPLACE(hexaboard.hxb_name,'-','')) AS hxb_name,
             hxb_inspect.avg_thickness,
             hxb_inspect.max_thickness,
@@ -271,6 +279,7 @@ def check_toplayer_in_db(conn_info = [], top_layer_ids = [], ass_type = 'module'
             hxb_inspect.comment AS inspect_comment,
             hexaboard.comment AS hexaboard_comment,
             hexaboard.roc_version
+            hexaboard.obsolete
         FROM hxb_inspect FULL OUTER JOIN hexaboard
         ON REPLACE(hxb_inspect.hxb_name,'-','') = REPLACE(hexaboard.hxb_name,'-','') WHERE COALESCE(REPLACE(hxb_inspect.hxb_name,'-',''), REPLACE(hexaboard.hxb_name,'-','')) = ANY($1) ORDER BY hxb_name, hxb_inspect.hxb_row_no DESC NULLS LAST;"""
 
@@ -306,6 +315,13 @@ def check_toplayer_in_db(conn_info = [], top_layer_ids = [], ass_type = 'module'
         for row2 in rows2:
             index = top_layer_ids.index(row2[f'{prefix}_name'])
             status_list[index] = 'unused' if not row2[f"{ass_type}_name"] else f"{row2[f'{ass_type}_name'][5:9]}-{row2[f'{ass_type}_name'][-4:]}"
+
+    if type(rows) is list:
+        for row in rows:
+            index = top_layer_ids.index(row[f'{prefix}_name'])
+            if (ass_type == 'module' and rows[index]['obsolete']) or (ass_type == 'proto' and rows[index]['grade'] and rows[index]['grade'].lower() in 'fbrokenobsolete'):  ### catch null entries in grade before checking
+                status_list[index] = 'obsolete'
+                
     cols.insert(1,'status')
     default_return['status'] = status_list
 
