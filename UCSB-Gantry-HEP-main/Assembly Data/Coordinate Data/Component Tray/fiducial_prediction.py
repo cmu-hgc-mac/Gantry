@@ -66,7 +66,7 @@ def fiducial_prediction(assembly_type, pos, new_fds, old_fds, rotations):
             return old_fds
         else:
             predicted[0] = CH1
-            ###Z_diff = round(CH1[2]-old_fds[0][2],1) ### check Z compared to previously fiducials to check for 200/300 um sensor
+            Z_diff = old_fds[1][2] - old_fds[0][2]
         if not CH8:
             if (len(rotations) > 1):
                 CH8 = [CH1[0]+y_distance*sin(rotation),CH1[1]+y_distance*cos(rotation), CH1[2]]
@@ -76,7 +76,7 @@ def fiducial_prediction(assembly_type, pos, new_fds, old_fds, rotations):
             rotation = adjust_rotation(atan2((CH8[1]-CH1[1]),(CH8[0]-CH1[0])))
         predicted[2] = CH8
         if not CH191:
-            CH191 = [CH1[0]+x_distance*cos(rotation),CH1[1]+x_distance*sin(rotation),CH1[2]]
+            CH191 = [CH1[0]+x_distance*cos(rotation),CH1[1]+x_distance*sin(rotation),CH1[2]+Z_diff]
         predicted[1] = CH191
         if not CH197:
             CH197 = [CH191[0]-y_distance*sin(rotation),CH8[1]+x_distance*sin(rotation),CH191[2]]

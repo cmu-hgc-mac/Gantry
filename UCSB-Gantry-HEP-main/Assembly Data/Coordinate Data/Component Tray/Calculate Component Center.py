@@ -268,7 +268,7 @@ def get_CH_1(center, distance, CH1_8_rotation, CH1_Z):
     return CH1_XYZ
 
 def get_ID(center, CH1_8_rotation):
-    XY = polar_to_XY(83.104,radians(270-1.134) + CH1_8_rotation)      ### ID is radius 82mm at (270 degrees + rotation) relative to the center
+    XY = polar_to_XY(83.11,radians(270-1.152) + CH1_8_rotation)      ### ID is radius 82mm at (270 degrees + rotation) relative to the center
     ID_XYZ = [XY[0]+center[0],XY[1]+center[1]]        ### add center XY to get absolute value on gantry
     ID_XYZ.append(center[2])    ### Use average Z
     return ID_XYZ

@@ -87,6 +87,10 @@ def Calculate_Centers(gantry,OGP):              ### gantry is fiducials measured
     pos2 = build_XYZU(mapped_pos2)              ### pass center and offset pins to create center XYZU for pos2
     mapped_syringe.append(0)                    ### append 0 as U for syringe as an arbitrary place holder, otherwise LV throws an error
     #Centers = [pos1,pos2,mapped_syringe]        ### return XYZU for pos1, pos2, and syringe
+    #mapped_offset1 = mapped_OGP[3]
+    #mapped_offset1.append(0)
+    #mapped_offset2 = mapped_OGP[5]
+    #mapped_offset2.append(0)
     Centers = [pos1,pos2,pos1,pos2,mapped_syringe]        ### return XYZU for pos1, pos2, pos3, pos4, and syringe
     return Centers
 
