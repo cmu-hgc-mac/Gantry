@@ -269,20 +269,24 @@ def check_toplayer_in_db(conn_info = [], top_layer_ids = [], ass_type = 'module'
         tracker_col = 'module_no'
         inspect_table_name = 'hxb_inspect'
         pk_name = 'hxb_row_no'
-        cols = [f'{prefix}_name','roc_version','avg_thickness','max_thickness','flatness','inspect_grade','inspect_comment','hexaboard_comment','obsolete']
-        default_data = ['', '', 0.0, 0.0, 0.0, False, None, None,False]
-        query = f"""SELECT DISTINCT ON (COALESCE(REPLACE(hxb_inspect.hxb_name,'-',''), REPLACE(hexaboard.hxb_name,'-',''))) COALESCE(REPLACE(hxb_inspect.hxb_name,'-',''), REPLACE(hexaboard.hxb_name,'-','')) AS hxb_name,
+        cols = [f'{prefix}_name','roc_version','avg_thickness','max_thickness','dead_cells','noisy_cells','flatness','inspect_grade','inspect_comment','hexaboard_comment','obsolete']
+        default_data = ['', '', 0.0, 0.0, None, None, 0.0, False, None, None, False]
+        query = f"""SELECT DISTINCT ON (COALESCE(hxb_inspect.hxb_name, hxb_pedestal_test.hxb_name, hexaboard.hxb_name)) COALESCE(hxb_inspect.hxb_name, hxb_pedestal_test.hxb_name, hexaboard.hxb_name) AS hxb_name,
+            hexaboard.roc_version,
             hxb_inspect.avg_thickness,
             hxb_inspect.max_thickness,
+            hxb_pedestal_test.list_dead_cells AS dead_cells,
+            hxb_pedestal_test.list_noisy_cells AS noisy_cells,
             hxb_inspect.flatness,
             hxb_inspect.grade AS inspect_grade,
             hxb_inspect.comment AS inspect_comment,
             hexaboard.comment AS hexaboard_comment,
-            hexaboard.roc_version
             hexaboard.obsolete
-        FROM hxb_inspect FULL OUTER JOIN hexaboard
-        ON REPLACE(hxb_inspect.hxb_name,'-','') = REPLACE(hexaboard.hxb_name,'-','') WHERE COALESCE(REPLACE(hxb_inspect.hxb_name,'-',''), REPLACE(hexaboard.hxb_name,'-','')) = ANY($1) ORDER BY hxb_name, hxb_inspect.hxb_row_no DESC NULLS LAST;"""
-
+        FROM hxb_inspect
+        FULL OUTER JOIN hexaboard ON hxb_inspect.hxb_name = hexaboard.hxb_name
+        FULL OUTER JOIN hxb_pedestal_test ON COALESCE(hxb_inspect.hxb_name, hexaboard.hxb_name) = hxb_pedestal_test.hxb_name
+        WHERE COALESCE(hxb_inspect.hxb_name, hxb_pedestal_test.hxb_name, hexaboard.hxb_name) = ANY($1)
+        ORDER BY hxb_name, hxb_inspect.hxb_row_no DESC NULLS LAST, hxb_pedestal_test.hxb_pedtest_no DESC NULLS LAST;"""
     
     default_return = {col: [str(default_data[c]) for part in top_layer_ids] for c, col in enumerate(cols)}    
     top_layer_ids = [i.replace('-','') for i in top_layer_ids]
