@@ -362,7 +362,10 @@ async def init_conn(conn_info):
 async def read_val_from_db(conn_info=[], query = '', val = []):
     try:
         conn = await init_conn(conn_info)  
-        rows = await conn.fetch(query, list(val))
+        if val:
+            rows = await conn.fetch(query, list(val))
+        else:
+            rows = await conn.fetch(query)
         print(f'Query executed successfully: {query}')
         await conn.close() ## outside the loop
         return rows
