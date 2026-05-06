@@ -34,6 +34,22 @@ def get_offsets_from_db(conn_info = [], ass_type = 'module', date_since = '2026-
         return [header] + [[row[f'{ass_type}_name'], row['ass_run_date'].strftime('%Y-%m-%d'), str(row['x_offset_mu']), str(row['y_offset_mu']), str(np.round(row['ang_offset_deg'], 6))] for row in rows]
     return [header]
 
+
+def get_temperature_humidity_from_db(conn_info = [], log_location = ''):
+    
+    query = f"""SELECT log_timestamp, temp_c, rel_hum 
+                FROM temp_humidity
+                WHERE log_location = '{log_location}'
+                ORDER BY log_no DESC LIMIT 1"""
+    try:
+        rows = asyncio.run(read_val_from_db(conn_info, query=query))
+    except:
+        rows = (asyncio.get_event_loop()).run_until_complete(read_val_from_db(conn_info, query=query))
+    if rows:
+        return [[row['log_timestamp'].strftime('%Y-%m-%d'),str(row["temp_c"]), str(row["rel_hum"])] for row in rows][0]  ### convert 2D list to 1D list
+    return ["", "", ""]
+
+
 async def read_val_from_db(conn_info=[], query = '', val = []):
     try:
         conn = await init_conn(conn_info)  
