@@ -40,6 +40,7 @@ def get_temperature_humidity_from_db(conn_info = [], log_location = ''):
     query = f"""SELECT log_timestamp, temp_c, rel_hum 
                 FROM temp_humidity
                 WHERE log_location = '{log_location}'
+                AND log_timestamp::date = CURRENT_DATE
                 ORDER BY log_no DESC LIMIT 1"""
     try:
         rows = asyncio.run(read_val_from_db(conn_info, query=query))
