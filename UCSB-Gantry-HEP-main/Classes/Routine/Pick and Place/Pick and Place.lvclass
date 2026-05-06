@@ -82,6 +82,15 @@
 			<Property Name="NI.ClassItem.Priority" Type="Int">1</Property>
 			<Property Name="NI.ClassItem.State" Type="Int">1107821072</Property>
 		</Item>
+		<Item Name="Read_offsets_from_DB.vi" Type="VI" URL="../Read_offsets_from_DB.vi">
+			<Property Name="NI.ClassItem.ConnectorPane" Type="Bin">)1#!!!!!!!)!"1!&amp;!!!-!%!!!@````]!!!!"!!%!!!$:!!!!#!!%!!!!$5!+!!&gt;/&gt;7VF=GFD!"R!1!!"`````Q!"$G&amp;O:V^P:G:T:82@:'6H!!!91%!!!@````]!!1NZ8W^G:H.F&gt;&amp;^N&lt;1!91%!!!@````]!!1NY8W^G:H.F&gt;&amp;^N&lt;1!51&amp;1!"AV"=X.F&lt;7*M?3"E982F!!R!)1&gt;.&lt;W2V&lt;'5`!&amp;1!]!!-!!!!!A!$!!1!!!!!!!!!!!!!!!5!!!!'!Q!!?!!!!!!!!!E!!!!*!!!!#1!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#!!!!!!!!!!)!!!!!!%!"Q!!!!!</Property>
+			<Property Name="NI.ClassItem.ExecutionSystem" Type="Int">-1</Property>
+			<Property Name="NI.ClassItem.Flags" Type="Int">0</Property>
+			<Property Name="NI.ClassItem.IsStaticMethod" Type="Bool">true</Property>
+			<Property Name="NI.ClassItem.MethodScope" Type="UInt">1</Property>
+			<Property Name="NI.ClassItem.Priority" Type="Int">1</Property>
+			<Property Name="NI.ClassItem.State" Type="Int">1342710290</Property>
+		</Item>
 	</Item>
 	<Item Name="Settings.vi" Type="VI" URL="../Settings.vi">
 		<Property Name="NI.ClassItem.ConnectorPane" Type="Bin">)1#!!!!!!!)!"1!&amp;!!!-!%!!!@````]!!!!"!!%!!!%T!!!!#1!-1#%'=X2B&gt;(6T!!!,1!-!"'.P:'5!!""!-0````]'=W^V=G.F!!!71&amp;!!!Q!!!!%!!AFF=H*P=C"P&gt;81!"!!!!$R!=!!?!!!9&amp;F"J9WMA97ZE)&amp;"M97.F,GRW9WRB=X-!!"B1;7.L)'&amp;O:#"1&lt;'&amp;D:3ZM&gt;G.M98.T)$)!!#"!5!!$!!!!!1!#%W6S=G^S)'FO)#BO&lt;S"F=H*P=CE!/E"Q!"Y!!"A75'FD;S"B&lt;G1A5'RB9W5O&lt;(:D&lt;'&amp;T=Q!!&amp;F"J9WMA97ZE)&amp;"M97.F,GRW9WRB=X-!!&amp;1!]!!-!!-!"!!%!!5!"!!%!!1!"!!'!!1!"!!(!Q!!?!!!$1A!!!!!!!!!!!!!D1M!!!!!!!!!!!!!!!!!!!!!!!!)!!!!!!!!!!!!!!#3!!!!!!%!#!!!!!!</Property>

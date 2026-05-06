@@ -50,11 +50,11 @@
 	<Item Name="Build.vi" Type="VI" URL="../../Classes/Routine/Dispense/Sensor Dispense/Build.vi">
 		<Property Name="NI.ClassItem.ConnectorPane" Type="Bin">)1#!!!!!!!)!"1!&amp;!!!-!%!!!@````]!!!!"!!%!!!%T!!!!#A!%!!!!.E"Q!"Y!!"E85W6O=W^S)%2J=X"F&lt;H.F,GRW9WRB=X-!%V.F&lt;H.P=C"%;8.Q:7ZT:3"P&gt;81!&amp;E!Q`````QV"=X.F&lt;7*M?3"5?8"F!!^!!Q!)5'^T;82J&lt;WY!!!V!#A!(4H6N:8*J9Q!71%!!!@````]!"!B976J5;'6U91!!"1!+!!!;1%!!!P``````````!!9*&gt;'6Y&gt;#"G;7RF!$:!=!!?!!!:&amp;V.F&lt;H.P=C"%;8.Q:7ZT:3ZM&gt;G.M98.T!"*4:7ZT&lt;X)A2'FT='6O=W5A;7Y!!&amp;1!]!!-!!!!!!!!!!%!!!!!!!)!!!!$!!5!"Q!)!Q!!?!!!!!!!!!!!!!!!!!!!D1M!!!!!!!!!!!!##!!!!!!!!!!+!!!##!!!!1I!!!#3!!!!!!%!#1!!!!!</Property>
 		<Property Name="NI.ClassItem.ExecutionSystem" Type="Int">-1</Property>
-		<Property Name="NI.ClassItem.Flags" Type="Int">1073741824</Property>
+		<Property Name="NI.ClassItem.Flags" Type="Int">33554432</Property>
 		<Property Name="NI.ClassItem.IsStaticMethod" Type="Bool">false</Property>
 		<Property Name="NI.ClassItem.MethodScope" Type="UInt">1</Property>
 		<Property Name="NI.ClassItem.Priority" Type="Int">1</Property>
-		<Property Name="NI.ClassItem.State" Type="Int">1107821072</Property>
+		<Property Name="NI.ClassItem.State" Type="Int">1342710288</Property>
 	</Item>
 	<Item Name="Default Settings.vi" Type="VI" URL="../../Classes/Routine/Dispense/Sensor Dispense/Default Settings.vi">
 		<Property Name="NI.ClassItem.ConnectorPane" Type="Bin">)1#!!!!!!!)!"1!&amp;!!!-!%!!!@````]!!!!"!!%!!!%`!!!!#A!-1#%'=X2B&gt;(6T!!!,1!-!"'.P:'5!!""!-0````]'=W^V=G.F!!!71&amp;!!!Q!!!!%!!AFF=H*P=C"P&gt;81!"!!!!$:!=!!?!!!:&amp;V.F&lt;H.P=C"%;8.Q:7ZT:3ZM&gt;G.M98.T!".4:7ZT&lt;X)A2'FT='6O=W5A&lt;X6U!":!-0````].18.T:7VC&lt;(EA6(FQ:1!A1&amp;!!!Q!!!!%!!B.F=H*P=C"J&lt;C!I&lt;G]A:8*S&lt;X)J!$:!=!!?!!!:&amp;V.F&lt;H.P=C"%;8.Q:7ZT:3ZM&gt;G.M98.T!"*4:7ZT&lt;X)A2'FT='6O=W5A;7Y!!&amp;1!]!!-!!-!"!!%!!5!"!!%!!9!"!!(!!1!"!!)!Q!!?!!!$1A!!!!!!!!!!!!!D1M!!!!!!!!!!!!##!!!!!!!!!!+!!!!!!!!!!!!!!#3!!!!!!%!#1!!!!!</Property>
@@ -72,7 +72,7 @@
 		<Property Name="NI.ClassItem.IsStaticMethod" Type="Bool">false</Property>
 		<Property Name="NI.ClassItem.MethodScope" Type="UInt">3</Property>
 		<Property Name="NI.ClassItem.Priority" Type="Int">1</Property>
-		<Property Name="NI.ClassItem.State" Type="Int">1107821072</Property>
+		<Property Name="NI.ClassItem.State" Type="Int">1342710288</Property>
 		<Property Name="NI.LibItem.Scope" Type="Int">3</Property>
 	</Item>
 	<Item Name="Settings.vi" Type="VI" URL="../Settings.vi">
@@ -87,11 +87,11 @@
 	<Item Name="Time.vi" Type="VI" URL="../../Classes/Routine/Dispense/Sensor Dispense/Time.vi">
 		<Property Name="NI.ClassItem.ConnectorPane" Type="Bin">)1#!!!!!!!)!"1!&amp;!!!-!%!!!@````]!!!!"!!%!!!,%!!!!%1!-1#%'=X2B&gt;(6T!!!,1!-!"'.P:'5!!""!-0````]'=W^V=G.F!!!71&amp;!!!Q!!!!%!!AFF=H*P=C"P&gt;81!"1!$!!!91%!!!@````]!"!N5;7VJ&lt;G=A2'&amp;U91!C1(!!(A!!$1N*,5]O&lt;(:D&lt;'&amp;T=Q!,33V0,GRW9WRB=X-!AE"Q!"A!!!!"!!!!&lt;%&amp;F=G^U:7.I,E%T-D!Q,E.P&lt;H2S&lt;WRM:8)M)%&amp;F=G^U:7.I,E%T-D!Q,#"7:8*T;7^O04!O-#YQ,D!M)%.V&lt;(2V=G5^&lt;G6V&gt;(*B&lt;#QA5(6C&lt;'FD3W6Z6'^L:7Y^.$=Y:4=S.T%Z9T-S.T-V:1:(97ZU=HE!!"Y!.`````]!"#%!A!!!!!!"!!1!!!!"!!!!!!!!!#Z!=!!/"5FO=X2S!!%!##%!A!!!!!!"!!1!!!!"!!!!!!!!#52J=X"F&lt;H.F=A"(!0%!!!!!!!!!!B*$&lt;WZU=G^M&lt;'6S,GRW9WRB=X-01W^O&gt;(*P&lt;'RF=H-O9X2M!"R!5!!$!!9!"Q!*#U.P&lt;H2S&lt;WQA4X6U!$:!=!!?!!!:&amp;V.F&lt;H.P=C"%;8.Q:7ZT:3ZM&gt;G.M98.T!".4:7ZT&lt;X)A2'FT='6O=W5A&lt;X6U!!1!!!!A1&amp;!!!Q!!!!%!!B.F=H*P=C"J&lt;C!I&lt;G]A:8*S&lt;X)J!%=!]1!!!!!!!!!#%E.P&lt;H2S&lt;WRM:8)O&lt;(:D&lt;'&amp;T=Q^$&lt;WZU=G^M&lt;'6S=SZD&gt;'Q!(%"1!!-!"A!(!!E+1W^O&gt;(*P&lt;#"*&lt;A!!.E"Q!"Y!!"E85W6O=W^S)%2J=X"F&lt;H.F,GRW9WRB=X-!%F.F&lt;H.P=C"%;8.Q:7ZT:3"J&lt;A!!6!$Q!!Q!!Q!&amp;!!I!#Q!-!!Q!$!!-!!U!$!!/!!]$!!"Y!!!.#!!!#1!!!!U+!!#.#Q!!!!!!!!!!!!!!!!!!!!!!!!A!!!!!!!!!#!!!!*)!!!!!!1!1!!!!!!</Property>
 		<Property Name="NI.ClassItem.ExecutionSystem" Type="Int">-1</Property>
-		<Property Name="NI.ClassItem.Flags" Type="Int">33554432</Property>
+		<Property Name="NI.ClassItem.Flags" Type="Int">1073741824</Property>
 		<Property Name="NI.ClassItem.IsStaticMethod" Type="Bool">false</Property>
 		<Property Name="NI.ClassItem.MethodScope" Type="UInt">3</Property>
 		<Property Name="NI.ClassItem.Priority" Type="Int">1</Property>
-		<Property Name="NI.ClassItem.State" Type="Int">1074274832</Property>
+		<Property Name="NI.ClassItem.State" Type="Int">1115685392</Property>
 		<Property Name="NI.LibItem.Scope" Type="Int">3</Property>
 	</Item>
 	<Item Name="Untitled 3.vi" Type="VI" URL="../Untitled 3.vi">
