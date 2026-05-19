@@ -7,19 +7,29 @@ import asyncio, asyncpg, traceback #, sys, os
 ########################### GET PARTS DATA FROM DATABASE #########################
 #################################################################################
 
-def get_offsets_from_db(conn_info = [], ass_type = 'module', date_since = '2026-04-01', no_of_parts = 16):
+def get_offsets_from_db(conn_info = [], ass_type = 'module', put_position = "", ass_tray_id = "", date_since = '2026-04-01', no_of_parts = 16):
     if ass_type in ['proto', 'module']:
-        header = ["name", "assembly_date", "x_offset_mu", "y_offset_mu", "ang_offset_deg"]
+        header = ["name", "assembly_date", "x_offset_mu", "y_offset_mu", "ang_offset_deg", "put_position", "ass_tray_id"]
         limit_clause = f"LIMIT {no_of_parts}" if no_of_parts else ""
+        filters = [f"ma.ass_run_date > '{date_since}'"]
+        if put_position:
+            filters.append(f"ma.put_position = '{put_position}'")
+        if ass_tray_id:
+            filters.append(f"ma.ass_tray_id = '{ass_tray_id}'")
+
+        where_clause = " AND ".join(filters)
+        
         query = f"""SELECT * FROM (
                     SELECT mi.{ass_type}_name,
                     ma.ass_run_date,
                     mi.x_offset_mu,
                     mi.y_offset_mu,
-                    mi.ang_offset_deg
+                    mi.ang_offset_deg,
+                    ma.put_position,
+                    ma.ass_tray_id
                     FROM {ass_type}_inspect mi
                     JOIN {ass_type}_assembly ma ON mi.{ass_type}_name = ma.{ass_type}_name
-                    WHERE ma.ass_run_date > '{date_since}'
+                    WHERE {where_clause}
                     ORDER BY ma.ass_run_date DESC, mi.{ass_type}_name DESC
                     {limit_clause}
                     ) sub
@@ -31,7 +41,7 @@ def get_offsets_from_db(conn_info = [], ass_type = 'module', date_since = '2026-
         rows = (asyncio.get_event_loop()).run_until_complete(read_val_from_db(conn_info, query=query))
     
     if type(rows) is list:
-        return [header] + [[row[f'{ass_type}_name'], row['ass_run_date'].strftime('%Y-%m-%d'), str(row['x_offset_mu']), str(row['y_offset_mu']), str(np.round(row['ang_offset_deg'], 6))] for row in rows]
+        return [header] + [[row[f'{ass_type}_name'], row['ass_run_date'].strftime('%Y-%m-%d'), str(row['x_offset_mu']), str(row['y_offset_mu']), str(np.round(row['ang_offset_deg'], 6)), row['put_position'], row['ass_tray_id'] ] for row in rows]
     return [header]
 
 
