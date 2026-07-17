@@ -83,13 +83,13 @@
 			<Property Name="NI.ClassItem.State" Type="Int">1107821072</Property>
 		</Item>
 		<Item Name="Read_offsets_from_DB.vi" Type="VI" URL="../Read_offsets_from_DB.vi">
-			<Property Name="NI.ClassItem.ConnectorPane" Type="Bin">)1#!!!!!!!)!"1!&amp;!!!-!%!!!@````]!!!!"!!%!!!%*!!!!#A!%!!!!$5!+!!&gt;/&gt;7VF=GFD!"R!1!!"`````Q!"$G&amp;O:V^P:G:T:82@:'6H!!!91%!!!@````]!!1NZ8W^G:H.F&gt;&amp;^N&lt;1!91%!!!@````]!!1NY8W^G:H.F&gt;&amp;^N&lt;1!51&amp;1!"AV"=X.F&lt;7*M?3"E982F!":!-0````]-5&amp;65)("P=WFU;7^O!!!;1$$`````%%&amp;T=W6N9GRZ)&amp;2S98EA351!!!R!)1&gt;.&lt;W2V&lt;'5`!&amp;1!]!!-!!!!!A!$!!1!!!!!!!!!!!!&amp;!!9!"Q!)!Q!!?!!!!!!!!!E!!!!*!!!!#1!!!!!!!!!!!!!!!!!!!!!!!!!+!!!"#A!!!1I!!!!)!!!!!!%!#1!!!!!</Property>
+			<Property Name="NI.ClassItem.ConnectorPane" Type="Bin">)1#!!!!!!!)!"1!&amp;!!!-!%!!!@````]!!!!"!!%!!!%Q!!!!$!!01!I!#'&amp;E:#"C;7&amp;T!!!91%!!!@````]!!!N#;7&amp;T)(2P)'&amp;E:!!.1!I!"UZV&lt;76S;7-!(%"!!!(`````!!)/97ZH8W^G:H.F&gt;&amp;^E:7=!!"B!1!!"`````Q!##XF@&lt;W:G=W6U8WVN!"B!1!!"`````Q!##XB@&lt;W:G=W6U8WVN!!1!!!!51&amp;1!"AV"=X.F&lt;7*M?3"E982F!":!-0````]-5&amp;65)("P=WFU;7^O!!!;1$$`````%%&amp;T=W6N9GRZ)&amp;2S98EA351!!!R!)1&gt;.&lt;W2V&lt;'5`!&amp;1!]!!-!!%!!Q!%!!5!"A!'!!9!"A!(!!A!#1!+!Q!!?!!!#1!!!!E!!!!*!!!!#1!!!!!!!!!!!!!!!!!!!!!!!!!+!!!"#A!!!1I!!!!)!!!!!!%!#Q!!!!!</Property>
 			<Property Name="NI.ClassItem.ExecutionSystem" Type="Int">-1</Property>
 			<Property Name="NI.ClassItem.Flags" Type="Int">256</Property>
 			<Property Name="NI.ClassItem.IsStaticMethod" Type="Bool">true</Property>
 			<Property Name="NI.ClassItem.MethodScope" Type="UInt">1</Property>
 			<Property Name="NI.ClassItem.Priority" Type="Int">1</Property>
-			<Property Name="NI.ClassItem.State" Type="Int">1107821074</Property>
+			<Property Name="NI.ClassItem.State" Type="Int">1342710290</Property>
 		</Item>
 	</Item>
 	<Item Name="Settings.vi" Type="VI" URL="../Settings.vi">
