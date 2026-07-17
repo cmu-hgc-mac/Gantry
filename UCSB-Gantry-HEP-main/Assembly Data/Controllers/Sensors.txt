@@ -14,4 +14,5 @@ Region 2 pos 1 Si/PCB	9
 Region 2 pos 2 Si/PCB	10
 Region 2 pos 3 Si/PCB	11
 Region 2 pos 4 Si/PCB	12
-Dispenser   31
+Dispenser	31
+Light Curtain	27
