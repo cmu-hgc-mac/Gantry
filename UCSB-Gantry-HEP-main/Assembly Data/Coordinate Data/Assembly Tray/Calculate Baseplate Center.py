@@ -29,15 +29,16 @@ def setup_rotation(angle):
 
 ### define function to rotate and translate OGP relative measurements to gantry    
 def map_to_gantry(gantry,OGP):
-    XY_diff = [gantry [0][0] - OGP[0][0],gantry[0][1] - OGP[0][1]]    ### XY translational constant
+    XYZ_diff = [gantry[0][0]-OGP[0][0], gantry[0][1]-OGP[0][1], gantry[0][2]-OGP[0][2]]    ### XY translational constant
     U_diff = get_angle(gantry[0],gantry[1]) - get_angle(OGP[0],OGP[1])    ### rotational constant
     mapped_OGP = []
-    for XY in OGP:      ### OGP fiducials do not need to returned
-        tXY = [XY[0] - gantry[0][0] + XY_diff[0], XY[1] - gantry[0][1] + XY_diff[1]]  ### subtract F1 and add translational XY
-        theta_prime = atan2(tXY[1],tXY[0]) + U_diff       ### get angle of XY and add theta difference between F1 meas and rel
-        tXYr = sqrt(tXY[0]**2+tXY[1]**2)                  ### get radius of translated points from F1
-        newXYZ = [tXYr * cos(theta_prime) + gantry[0][0],tXYr * sin(theta_prime) + gantry[0][1],OGP[6][2] + gantry[0][2] - OGP[0][2]]     ### get rotated and translated XY while also adding back 
-        mapped_OGP.append(newXYZ)      ### Append Z value, which is based on syringe. Find Workspace.vi adds baseplate pedestal height to pos1 and pos2.
+    for XYZ in OGP:      ### OGP fiducials do not need to returned
+        tXYZ = [XYZ[0] - gantry[0][0] + XYZ_diff[0], XYZ[1] - gantry[0][1] + XYZ_diff[1], XYZ[2] - gantry[0][2] + XYZ_diff[2]]  ### subtract F1 and add translational XYZ
+        theta_prime = atan2(tXYZ[1],tXYZ[0]) + U_diff       ### get angle of XY and add theta difference between F1 meas and rel
+        tXYr = sqrt(tXYZ[0]**2+tXYZ[1]**2)                  ### get radius of translated points from F1
+        newXYZ = [tXYr * cos(theta_prime) + gantry[0][0], tXYr * sin(theta_prime) + gantry[0][1], tXYZ[2] + gantry[0][2]]     ### get rotated and translated XY while also adding back, Z is now top of pedestal area (not loading pins!)
+        ### newXYZ = [tXYr * cos(theta_prime) + gantry[0][0], tXYr * sin(theta_prime) + gantry[0][1], OGP[6][2]+gantry[0][2]-OGP[0][2]]     ### get rotated and translated XY while also adding back 
+        mapped_OGP.append(newXYZ)      ### Append Z value, which is based on syringe
 
     return(mapped_OGP)      ### return mapped XYZ for: pos1, pos2, syringe
 
@@ -86,11 +87,6 @@ def Calculate_Centers(gantry,OGP):              ### gantry is fiducials measured
     pos1 = build_XYZU(mapped_pos1)              ### pass center and offset pins to create center XYZU for pos1
     pos2 = build_XYZU(mapped_pos2)              ### pass center and offset pins to create center XYZU for pos2
     mapped_syringe.append(0)                    ### append 0 as U for syringe as an arbitrary place holder, otherwise LV throws an error
-    #Centers = [pos1,pos2,mapped_syringe]        ### return XYZU for pos1, pos2, and syringe
-    #mapped_offset1 = mapped_OGP[3]
-    #mapped_offset1.append(0)
-    #mapped_offset2 = mapped_OGP[5]
-    #mapped_offset2.append(0)
     Centers = [pos1,pos2,pos1,pos2,mapped_syringe]        ### return XYZU for pos1, pos2, pos3, pos4, and syringe
     return Centers
 
@@ -107,7 +103,6 @@ def Calculate_Centers_Right_Partial(gantry,OGP):              ### gantry is fidu
     pos2 = build_XYZU_Right_Partial(mapped_pos2)              ### pass center and offset pins to create center XYZU for pos2
     mapped_syringe.append(0)                    ### append 0 as U for syringe as an arbitrary place holder, otherwise LV throws an error
     Centers = [pos1,pos2,mapped_syringe]        ### return XYZU for pos1, pos2, and syringe
-    #print("This is Right Partial Centers: ", Centers)
     return Centers
 
 
