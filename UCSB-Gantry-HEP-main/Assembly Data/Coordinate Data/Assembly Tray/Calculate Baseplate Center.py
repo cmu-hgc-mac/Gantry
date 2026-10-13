@@ -30,6 +30,7 @@ def setup_rotation(angle):
 ### define function to rotate and translate OGP relative measurements to gantry    
 def map_to_gantry(gantry,OGP):
     XYZ_diff = [gantry[0][0]-OGP[0][0], gantry[0][1]-OGP[0][1], gantry[0][2]-OGP[0][2]]    ### XY translational constant
+    print(XYZ_diff[2])
     U_diff = get_angle(gantry[0],gantry[1]) - get_angle(OGP[0],OGP[1])    ### rotational constant
     mapped_OGP = []
     for XYZ in OGP:      ### OGP fiducials do not need to returned
@@ -108,19 +109,19 @@ def Calculate_Centers_Right_Partial(gantry,OGP):              ### gantry is fidu
 
 # ### For testing only
 
-# gantrytest = [[463.848342, 726.221313, 64.051654],
-#                [462.521526, 1081.253003, 64.023415]]
+gantrytest = [[307.718862, 711.788142, 87.816139],
+              [542.773550, 713.175350, 87.827960]]
 
 # gantryRightPartial = [[457.573130, 712.877978, 64.051654],
 #                [457.732729, 1119.256087, 64.023415]]
 
-# OGPtest = [[0,-355.043,2.5828],
-#             [0.0,0,2.49156],
-#             [137.03, -260.73, 0],
-#             [62.131, -260.471, 0],
-#             [101.65204,324.00151,0],
-#             [176.51029,323.94894,0],
-#             [168.20555,416.07082,0.03927]]
+OGPtest = [[307.438794, 711.870437, 2.64547],
+           [542.491252, 713.161998, 2.67095],
+           [450.447703, 820.194211, -15.84009],
+           [375.522343, 820.147342, -15.84009],
+           [399.548444, 1010.653689, -15.98344],
+           [474.502936, 1010.686598, -15.98344],
+           [430.514852, 1106.008988, -0.66237]]
 
 # OGPPartialRight = [[0.003,-406.374,2.5828],
 #             [0.0,0,2.49156],
@@ -149,6 +150,8 @@ def Calculate_Centers_Right_Partial(gantry,OGP):              ### gantry is fidu
 #             [176.51029,323.94894],
 #             [168.20555,416.07082,0.03927]]
 
-#print("This is Calculate Center:", Calculate_Centers(gantrytest,OGPtest))
-
+Centers = Calculate_Centers(gantrytest,OGPtest)
+for item in Centers:
+    print(item)
+    
 
