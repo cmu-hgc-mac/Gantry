@@ -1,3 +1,5 @@
 /UCSB-Gantry-HEP-main/Main VIs/python_db/__pycache__
 /UCSB-Gantry-HEP-main/Assembly Data/Log Files/Assembly Log Files.txt
+
+### DO NOT REMOVE FROM .gitignore -- CONTAINS SENSITIVE!!
 /UCSB-Gantry-HEP-main/Assembly Data/Database Config/conn.txt
